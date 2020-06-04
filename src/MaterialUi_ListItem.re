@@ -64,8 +64,8 @@ external makePropsMui:
     ~button: bool=?,
     ~children: 'children=?,
     ~className: string=?,
-    ~component: 'union_r466=?,
-    ~_ContainerComponent: 'union_rbn3=?,
+    ~component: 'union_rfi4=?,
+    ~_ContainerComponent: 'union_ro5f=?,
     ~_ContainerProps: Js.t({..})=?,
     ~dense: bool=?,
     ~disabled: bool=?,
@@ -74,7 +74,7 @@ external makePropsMui:
     ~focusVisibleClassName: string=?,
     ~selected: bool=?,
     ~id: string=?,
-    ~value: 'union_r1dc=?,
+    ~value: 'union_rhdj=?,
     ~onFocus: ReactEvent.Focus.t => unit=?,
     ~onClick: ReactEvent.Mouse.t => unit=?,
     ~key: string=?,
@@ -134,7 +134,7 @@ let makeProps =
       (),
     ) =>
   makePropsMui(
-    ~alignItems=?alignItems->(Belt.Option.map(v => alignItemsToJs(v))),
+    ~alignItems=?alignItems->Belt.Option.map(v => alignItemsToJs(v)),
     ~autoFocus?,
     ~button?,
     ~children?,

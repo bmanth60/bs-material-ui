@@ -1,14 +1,16 @@
 [@bs.deriving jsConverter]
 type direction = [
+  | [@bs.as "down"] `Down
   | [@bs.as "left"] `Left
   | [@bs.as "right"] `Right
   | [@bs.as "up"] `Up
-  | [@bs.as "down"] `Down
 ];
 
 module Timeout_shape = {
   [@bs.deriving abstract]
   type t = {
+    [@bs.optional]
+    appear: [ | `Int(int) | `Float(float)],
     [@bs.optional]
     enter: [ | `Int(int) | `Float(float)],
     [@bs.optional]
@@ -18,6 +20,16 @@ module Timeout_shape = {
 
   let unwrap = (obj: t) => {
     let unwrappedMap = Js.Dict.empty();
+
+    switch (
+      obj
+      ->appearGet
+      ->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
+    ) {
+    | Some(v) =>
+      unwrappedMap->(Js.Dict.set("appear", v->MaterialUi_Helpers.toJsUnsafe))
+    | None => ()
+    };
 
     switch (
       obj->enterGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
@@ -49,7 +61,7 @@ external makePropsMui:
     ~onEntering: ReactEvent.Synthetic.t => unit=?,
     ~onExit: ReactEvent.Synthetic.t => unit=?,
     ~onExited: ReactEvent.Synthetic.t => unit=?,
-    ~timeout: 'union_rrep=?,
+    ~timeout: 'union_ra9k=?,
     ~id: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
@@ -75,7 +87,7 @@ let makeProps =
     ) =>
   makePropsMui(
     ~children?,
-    ~direction=?direction->(Belt.Option.map(v => directionToJs(v))),
+    ~direction=?direction->Belt.Option.map(v => directionToJs(v)),
     ~_in=?in_,
     ~onEnter?,
     ~onEntering?,

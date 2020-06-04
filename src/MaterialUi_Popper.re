@@ -16,9 +16,9 @@ type placement = [
 [@bs.obj]
 external makePropsMui:
   (
-    ~anchorEl: 'union_r4bo=?,
+    ~anchorEl: 'union_r1da=?,
     ~children: 'children=?,
-    ~container: 'union_rvu9=?,
+    ~container: 'union_rme2=?,
     ~disablePortal: bool=?,
     ~keepMounted: bool=?,
     ~modifiers: Js.t({..})=?,
@@ -40,10 +40,7 @@ let makeProps =
            [ | `ObjectGeneric(Js.t({..})) | `Callback('genericCallback)],
          )=?,
       ~children: option('children)=?,
-      ~container:
-         option(
-           [ | `ObjectGeneric(Js.t({..})) | `Callback('genericCallback)],
-         )=?,
+      ~container: option([ | `Callback('genericCallback)])=?,
       ~disablePortal: option(bool)=?,
       ~keepMounted: option(bool)=?,
       ~modifiers: option(Js.t({..}))=?,
@@ -66,7 +63,7 @@ let makeProps =
     ~keepMounted?,
     ~modifiers?,
     ~_open=open_,
-    ~placement=?placement->(Belt.Option.map(v => placementToJs(v))),
+    ~placement=?placement->Belt.Option.map(v => placementToJs(v)),
     ~popperOptions?,
     ~transition?,
     ~id?,

@@ -1,19 +1,28 @@
 [@bs.deriving jsConverter]
+type type_ = [
+  | [@bs.as "submit"] `Submit
+  | [@bs.as "reset"] `Reset
+  | [@bs.as "button"] `Button
+];
+
+[@bs.deriving jsConverter]
 type color = [
+  | [@bs.as "default"] `Default
   | [@bs.as "primary"] `Primary
   | [@bs.as "secondary"] `Secondary
-  | [@bs.as "default"] `Default
 ];
 
-[@bs.deriving jsConverter]
-type edge = [
-  | [@bs.as "start"] `Start
-  | [@bs.as "end"] `End
-  | [@bs.as "false"] `False
-];
+module Edge = {
+  type t = [ | `End | `Start | `False];
+  let tToJs =
+    fun
+    | `End => "end"->Obj.magic
+    | `Start => "start"->Obj.magic
+    | `False => false->Obj.magic;
+};
 
 [@bs.deriving jsConverter]
-type size = [ | [@bs.as "small"] `Small | [@bs.as "medium"] `Medium];
+type size = [ | [@bs.as "medium"] `Medium | [@bs.as "small"] `Small];
 
 module Classes = {
   type classesType =
@@ -74,7 +83,7 @@ module Classes = {
 external makePropsMui:
   (
     ~centerRipple: bool=?,
-    ~component: 'union_rhfc=?,
+    ~component: 'union_r9h3=?,
     ~disableTouchRipple: bool=?,
     ~focusRipple: bool=?,
     ~focusVisibleClassName: string=?,
@@ -92,8 +101,9 @@ external makePropsMui:
     ~onTouchMove: ReactEvent.Touch.t => unit=?,
     ~onTouchStart: ReactEvent.Touch.t => unit=?,
     ~role: string=?,
-    ~tabIndex: 'union_r4j6=?,
+    ~tabIndex: 'union_rwk9=?,
     ~_TouchRippleProps: Js.t({..})=?,
+    ~_type: string=?,
     ~children: 'children=?,
     ~disableFocusRipple: bool=?,
     ~checked: bool=?,
@@ -103,15 +113,14 @@ external makePropsMui:
     ~defaultChecked: bool=?,
     ~disabled: bool=?,
     ~disableRipple: bool=?,
-    ~edge: string=?,
+    ~edge: 'any_rp23=?,
     ~icon: React.element=?,
     ~id: string=?,
     ~inputProps: Js.t({..})=?,
-    ~onChange: 'any_ry10=?,
+    ~onChange: 'any_rvsr=?,
     ~required: bool=?,
     ~size: string=?,
-    ~_type: string=?,
-    ~value: 'any_reyj=?,
+    ~value: 'any_rxtq=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
     ~classes: Js.Dict.t(string)=?,
@@ -150,6 +159,7 @@ let makeProps =
       ~role: option(string)=?,
       ~tabIndex: option([ | `Int(int) | `Float(float) | `String(string)])=?,
       ~_TouchRippleProps: option(Js.t({..}))=?,
+      ~type_: option(type_)=?,
       ~children: option('children)=?,
       ~disableFocusRipple: option(bool)=?,
       ~checked: option(bool)=?,
@@ -159,15 +169,14 @@ let makeProps =
       ~defaultChecked: option(bool)=?,
       ~disabled: option(bool)=?,
       ~disableRipple: option(bool)=?,
-      ~edge: option(edge)=?,
+      ~edge: option(Edge.t)=?,
       ~icon: option(React.element)=?,
       ~id: option(string)=?,
       ~inputProps: option(Js.t({..}))=?,
       ~onChange: option(ReactEvent.Form.t => unit)=?,
       ~required: option(bool)=?,
       ~size: option(size)=?,
-      ~type_: option(string)=?,
-      ~value: option('any_reyj)=?,
+      ~value: option('any_rxtq)=?,
       ~key: option(string)=?,
       ~ref: option(ReactDOMRe.domRef)=?,
       ~classes: option(Classes.t)=?,
@@ -198,23 +207,23 @@ let makeProps =
     ~tabIndex=?
       tabIndex->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~_TouchRippleProps?,
+    ~_type=?type_->Belt.Option.map(v => type_ToJs(v)),
     ~children?,
     ~disableFocusRipple?,
     ~checked?,
     ~checkedIcon?,
     ~className?,
-    ~color=?color->(Belt.Option.map(v => colorToJs(v))),
+    ~color=?color->Belt.Option.map(v => colorToJs(v)),
     ~defaultChecked?,
     ~disabled?,
     ~disableRipple?,
-    ~edge=?edge->(Belt.Option.map(v => edgeToJs(v))),
+    ~edge=?edge->Belt.Option.map(v => Edge.tToJs(v)),
     ~icon?,
     ~id?,
     ~inputProps?,
     ~onChange?,
     ~required?,
-    ~size=?size->(Belt.Option.map(v => sizeToJs(v))),
-    ~_type=?type_,
+    ~size=?size->Belt.Option.map(v => sizeToJs(v)),
     ~value?,
     ~key?,
     ~ref?,

@@ -90,15 +90,15 @@ external makePropsMui:
     ~centered: bool=?,
     ~children: 'children=?,
     ~className: string=?,
-    ~component: 'union_rgeb=?,
+    ~component: 'union_r4f6=?,
     ~indicatorColor: string=?,
-    ~onChange: 'any_r326=?,
+    ~onChange: 'any_rhdk=?,
     ~orientation: string=?,
-    ~_ScrollButtonComponent: 'union_rc2j=?,
+    ~_ScrollButtonComponent: 'union_r6en=?,
     ~scrollButtons: string=?,
     ~_TabIndicatorProps: Js.t({..})=?,
     ~textColor: string=?,
-    ~value: 'any_rbk9=?,
+    ~value: 'any_rfpg=?,
     ~variant: string=?,
     ~id: string=?,
     ~key: string=?,
@@ -123,7 +123,7 @@ let makeProps =
            ],
          )=?,
       ~indicatorColor: option(indicatorColor)=?,
-      ~onChange: option((ReactEvent.Form.t, 'any_r620) => unit)=?,
+      ~onChange: option((ReactEvent.Form.t, 'any_r670) => unit)=?,
       ~orientation: option(orientation)=?,
       ~_ScrollButtonComponent:
          option(
@@ -136,7 +136,7 @@ let makeProps =
       ~scrollButtons: option(scrollButtons)=?,
       ~_TabIndicatorProps: option(Js.t({..}))=?,
       ~textColor: option(textColor)=?,
-      ~value: option('any_rbk9)=?,
+      ~value: option('any_rfpg)=?,
       ~variant: option(variant)=?,
       ~id: option(string)=?,
       ~key: option(string)=?,
@@ -152,17 +152,16 @@ let makeProps =
     ~component=?
       component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~indicatorColor=?
-      indicatorColor->(Belt.Option.map(v => indicatorColorToJs(v))),
+      indicatorColor->Belt.Option.map(v => indicatorColorToJs(v)),
     ~onChange?,
-    ~orientation=?orientation->(Belt.Option.map(v => orientationToJs(v))),
+    ~orientation=?orientation->Belt.Option.map(v => orientationToJs(v)),
     ~_ScrollButtonComponent=?
       _ScrollButtonComponent->(
                                 Belt.Option.map(v =>
                                   MaterialUi_Helpers.unwrapValue(v)
                                 )
                               ),
-    ~scrollButtons=?
-      scrollButtons->(Belt.Option.map(v => scrollButtonsToJs(v))),
+    ~scrollButtons=?scrollButtons->Belt.Option.map(v => scrollButtonsToJs(v)),
     ~_TabIndicatorProps?,
     ~textColor=?
       textColor->(
@@ -174,7 +173,7 @@ let makeProps =
                    )
                  ),
     ~value?,
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
+    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
     ~id?,
     ~key?,
     ~ref?,

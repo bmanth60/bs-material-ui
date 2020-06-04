@@ -25,7 +25,7 @@ external makePropsMui:
   (
     ~children: 'children=?,
     ~className: string=?,
-    ~component: 'union_rvze=?,
+    ~component: 'union_r6f9=?,
     ~id: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,

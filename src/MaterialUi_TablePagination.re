@@ -17,12 +17,14 @@ type padding = [
 [@bs.deriving jsConverter]
 type size = [ | [@bs.as "medium"] `Medium | [@bs.as "small"] `Small];
 
-[@bs.deriving jsConverter]
-type sortDirection = [
-  | [@bs.as "asc"] `Asc
-  | [@bs.as "desc"] `Desc
-  | [@bs.as "false"] `False
-];
+module SortDirection = {
+  type t = [ | `Asc | `Desc | `False];
+  let tToJs =
+    fun
+    | `Asc => "asc"->Obj.magic
+    | `Desc => "desc"->Obj.magic
+    | `False => false->Obj.magic;
+};
 
 [@bs.deriving jsConverter]
 type variant = [
@@ -88,24 +90,24 @@ external makePropsMui:
     ~padding: string=?,
     ~scope: string=?,
     ~size: string=?,
-    ~sortDirection: string=?,
+    ~sortDirection: 'any_rae9=?,
     ~variant: string=?,
     ~id: string=?,
-    ~_ActionsComponent: 'union_r47t=?,
+    ~_ActionsComponent: 'union_r6ar=?,
     ~backIconButtonProps: Js.t({..})=?,
     ~backIconButtonText: string=?,
     ~className: string=?,
-    ~colSpan: 'number_2=?,
-    ~component: 'union_rv3a=?,
+    ~colSpan: 'number_a=?,
+    ~component: 'union_rrta=?,
     ~count: 'number_0,
     ~labelDisplayedRows: 'labelDisplayedRows=?,
     ~labelRowsPerPage: 'labelRowsPerPage=?,
     ~nextIconButtonProps: Js.t({..})=?,
     ~nextIconButtonText: string=?,
-    ~onChangePage: 'any_rwic,
-    ~onChangeRowsPerPage: 'any_r9ap=?,
+    ~onChangePage: 'any_rs30,
+    ~onChangeRowsPerPage: 'any_ruro=?,
     ~page: int=?,
-    ~rowsPerPage: 'number_i,
+    ~rowsPerPage: 'number_y,
     ~rowsPerPageOptions: array(int)=?,
     ~_SelectProps: Js.t({..})=?,
     ~key: string=?,
@@ -123,7 +125,7 @@ let makeProps =
       ~padding: option(padding)=?,
       ~scope: option(string)=?,
       ~size: option(size)=?,
-      ~sortDirection: option(sortDirection)=?,
+      ~sortDirection: option(SortDirection.t)=?,
       ~variant: option(variant)=?,
       ~id: option(string)=?,
       ~_ActionsComponent:
@@ -183,14 +185,14 @@ let makeProps =
       (),
     ) =>
   makePropsMui(
-    ~align=?align->(Belt.Option.map(v => alignToJs(v))),
+    ~align=?align->Belt.Option.map(v => alignToJs(v)),
     ~children?,
-    ~padding=?padding->(Belt.Option.map(v => paddingToJs(v))),
+    ~padding=?padding->Belt.Option.map(v => paddingToJs(v)),
     ~scope?,
-    ~size=?size->(Belt.Option.map(v => sizeToJs(v))),
+    ~size=?size->Belt.Option.map(v => sizeToJs(v)),
     ~sortDirection=?
-      sortDirection->(Belt.Option.map(v => sortDirectionToJs(v))),
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
+      sortDirection->Belt.Option.map(v => SortDirection.tToJs(v)),
+    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
     ~id?,
     ~_ActionsComponent=?
       _ActionsComponent->(

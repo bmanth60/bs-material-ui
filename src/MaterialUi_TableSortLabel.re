@@ -46,7 +46,7 @@ module Classes = {
 external makePropsMui:
   (
     ~centerRipple: bool=?,
-    ~component: 'union_rzrk=?,
+    ~component: 'union_rpj3=?,
     ~disabled: bool=?,
     ~disableRipple: bool=?,
     ~disableTouchRipple: bool=?,
@@ -66,7 +66,7 @@ external makePropsMui:
     ~onTouchMove: ReactEvent.Touch.t => unit=?,
     ~onTouchStart: ReactEvent.Touch.t => unit=?,
     ~role: string=?,
-    ~tabIndex: 'union_rfy8=?,
+    ~tabIndex: 'union_rzyi=?,
     ~_TouchRippleProps: Js.t({..})=?,
     ~_type: string=?,
     ~id: string=?,
@@ -75,7 +75,7 @@ external makePropsMui:
     ~className: string=?,
     ~direction: string=?,
     ~hideSortIcon: bool=?,
-    ~_IconComponent: 'union_r8a1=?,
+    ~_IconComponent: 'union_r4fq=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
     ~classes: Js.Dict.t(string)=?,
@@ -163,12 +163,12 @@ let makeProps =
     ~tabIndex=?
       tabIndex->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~_TouchRippleProps?,
-    ~_type=?type_->(Belt.Option.map(v => type_ToJs(v))),
+    ~_type=?type_->Belt.Option.map(v => type_ToJs(v)),
     ~id?,
     ~active?,
     ~children?,
     ~className?,
-    ~direction=?direction->(Belt.Option.map(v => directionToJs(v))),
+    ~direction=?direction->Belt.Option.map(v => directionToJs(v)),
     ~hideSortIcon?,
     ~_IconComponent=?
       _IconComponent->(

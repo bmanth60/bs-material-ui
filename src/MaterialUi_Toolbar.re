@@ -37,7 +37,7 @@ external makePropsMui:
   (
     ~children: 'children=?,
     ~className: string=?,
-    ~component: 'union_rqd2=?,
+    ~component: 'union_rt18=?,
     ~disableGutters: bool=?,
     ~variant: string=?,
     ~id: string=?,
@@ -76,7 +76,7 @@ let makeProps =
     ~component=?
       component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~disableGutters?,
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
+    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
     ~id?,
     ~key?,
     ~ref?,
