@@ -1,77 +1,115 @@
-[@bs.deriving jsConverter]
-type type_ = [
-  | [@bs.as "submit"] `Submit
-  | [@bs.as "reset"] `Reset
-  | [@bs.as "button"] `Button
-];
-
-[@bs.deriving jsConverter]
-type edge = [
-  | [@bs.as "start"] `Start
-  | [@bs.as "end"] `End
-  | [@bs.as "false"] `False
-];
-
-[@bs.deriving jsConverter]
-type color = [
-  | [@bs.as "primary"] `Primary
-  | [@bs.as "secondary"] `Secondary
-  | [@bs.as "default"] `Default
-];
-
-[@bs.deriving jsConverter]
-type size = [ | [@bs.as "small"] `Small | [@bs.as "medium"] `Medium];
-
-module Classes = {
-  type classesType =
-    | Root(string)
-    | Checked(string)
-    | Disabled(string)
-    | Indeterminate(string)
-    | ColorPrimary(string)
-    | ColorSecondary(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | Checked(_) => "checked"
-    | Disabled(_) => "disabled"
-    | Indeterminate(_) => "indeterminate"
-    | ColorPrimary(_) => "colorPrimary"
-    | ColorSecondary(_) => "colorSecondary";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | Checked(className)
-                         | Disabled(className)
-                         | Indeterminate(className)
-                         | ColorPrimary(className)
-                         | ColorSecondary(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
 };
 
-[@bs.obj]
-external makePropsMui:
+module TabIndex: {
+  type t;
+  let int: int => t;
+  let float: float => t;
+  let string: string => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let string = (v: string) => Any(v);
+};
+
+module Type_enum: {
+  type t;
+  let button: t;
+  let reset: t;
+  let submit: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+
+  let button = Any("button");
+  let reset = Any("reset");
+  let submit = Any("submit");
+};
+
+module Type: {
+  type t;
+  let enum: Type_enum.t => t;
+  let string: string => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let enum = (v: Type_enum.t) => Any(v);
+  let string = (v: string) => Any(v);
+};
+
+module Edge: {
+  type t;
+  let start: t;
+  let _end: t;
+  let _false: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+
+  let start = Any("start");
+  let _end = Any("end");
+  let _false = Any(false);
+};
+
+module Classes = {
+  type t = {
+    .
+    "root": option(string),
+    "checked": option(string),
+    "disabled": option(string),
+    "indeterminate": option(string),
+    "colorPrimary": option(string),
+    "colorSecondary": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~checked: string=?,
+      ~disabled: string=?,
+      ~indeterminate: string=?,
+      ~colorPrimary: string=?,
+      ~colorSecondary: string=?,
+      unit
+    ) =>
+    t;
+};
+
+type color = [ | `Default | `Primary | `Secondary];
+
+type size = [ | `Medium | `Small];
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~centerRipple: bool=?,
-    ~component: 'union_rie1=?,
+    ~component: Component.t=?,
     ~disableTouchRipple: bool=?,
     ~focusRipple: bool=?,
     ~focusVisibleClassName: string=?,
+    ~href: string=?,
     ~onBlur: ReactEvent.Focus.t => unit=?,
     ~onClick: ReactEvent.Mouse.t => unit=?,
     ~onDragLeave: ReactEvent.Mouse.t => unit=?,
     ~onFocus: ReactEvent.Focus.t => unit=?,
-    ~onFocusVisible: 'genericCallback=?,
+    ~onFocusVisible: MaterialUi_Types.any=?,
     ~onKeyDown: ReactEvent.Keyboard.t => unit=?,
     ~onKeyUp: ReactEvent.Keyboard.t => unit=?,
     ~onMouseDown: ReactEvent.Mouse.t => unit=?,
@@ -80,17 +118,23 @@ external makePropsMui:
     ~onTouchEnd: ReactEvent.Touch.t => unit=?,
     ~onTouchMove: ReactEvent.Touch.t => unit=?,
     ~onTouchStart: ReactEvent.Touch.t => unit=?,
-    ~role: string=?,
-    ~tabIndex: 'union_rpzt=?,
+    ~tabIndex: TabIndex.t=?,
     ~_TouchRippleProps: Js.t({..})=?,
-    ~_type: string=?,
+    ~_type: Type.t=?,
+    ~style: ReactDOMRe.Style.t=?,
     ~children: 'children=?,
     ~className: string=?,
     ~disableFocusRipple: bool=?,
-    ~edge: string=?,
+    ~edge: Edge.t=?,
     ~checked: bool=?,
     ~checkedIcon: React.element=?,
-    ~color: string=?,
+    ~classes: Classes.t=?,
+    ~color: [@bs.string] [
+              | [@bs.as "default"] `Default
+              | [@bs.as "primary"] `Primary
+              | [@bs.as "secondary"] `Secondary
+            ]
+              =?,
     ~disabled: bool=?,
     ~disableRipple: bool=?,
     ~icon: React.element=?,
@@ -98,122 +142,16 @@ external makePropsMui:
     ~indeterminate: bool=?,
     ~indeterminateIcon: React.element=?,
     ~inputProps: Js.t({..})=?,
-    ~onChange: 'any_rkwt=?,
+    ~onChange: ReactEvent.Form.t => unit=?,
     ~required: bool=?,
-    ~size: string=?,
-    ~value: 'any_r5oc=?,
+    ~size: [@bs.string] [
+             | [@bs.as "medium"] `Medium
+             | [@bs.as "small"] `Small
+           ]
+             =?,
+    ~value: MaterialUi_Types.any=?,
     ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
-    ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~centerRipple: option(bool)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~disableTouchRipple: option(bool)=?,
-      ~focusRipple: option(bool)=?,
-      ~focusVisibleClassName: option(string)=?,
-      ~onBlur: option(ReactEvent.Focus.t => unit)=?,
-      ~onClick: option(ReactEvent.Mouse.t => unit)=?,
-      ~onDragLeave: option(ReactEvent.Mouse.t => unit)=?,
-      ~onFocus: option(ReactEvent.Focus.t => unit)=?,
-      ~onFocusVisible: option('genericCallback)=?,
-      ~onKeyDown: option(ReactEvent.Keyboard.t => unit)=?,
-      ~onKeyUp: option(ReactEvent.Keyboard.t => unit)=?,
-      ~onMouseDown: option(ReactEvent.Mouse.t => unit)=?,
-      ~onMouseLeave: option(ReactEvent.Mouse.t => unit)=?,
-      ~onMouseUp: option(ReactEvent.Mouse.t => unit)=?,
-      ~onTouchEnd: option(ReactEvent.Touch.t => unit)=?,
-      ~onTouchMove: option(ReactEvent.Touch.t => unit)=?,
-      ~onTouchStart: option(ReactEvent.Touch.t => unit)=?,
-      ~role: option(string)=?,
-      ~tabIndex: option([ | `Int(int) | `Float(float) | `String(string)])=?,
-      ~_TouchRippleProps: option(Js.t({..}))=?,
-      ~type_: option(type_)=?,
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~disableFocusRipple: option(bool)=?,
-      ~edge: option(edge)=?,
-      ~checked: option(bool)=?,
-      ~checkedIcon: option(React.element)=?,
-      ~color: option(color)=?,
-      ~disabled: option(bool)=?,
-      ~disableRipple: option(bool)=?,
-      ~icon: option(React.element)=?,
-      ~id: option(string)=?,
-      ~indeterminate: option(bool)=?,
-      ~indeterminateIcon: option(React.element)=?,
-      ~inputProps: option(Js.t({..}))=?,
-      ~onChange: option(ReactEvent.Form.t => unit)=?,
-      ~required: option(bool)=?,
-      ~size: option(size)=?,
-      ~value: option('any_r5oc)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~centerRipple?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~disableTouchRipple?,
-    ~focusRipple?,
-    ~focusVisibleClassName?,
-    ~onBlur?,
-    ~onClick?,
-    ~onDragLeave?,
-    ~onFocus?,
-    ~onFocusVisible?,
-    ~onKeyDown?,
-    ~onKeyUp?,
-    ~onMouseDown?,
-    ~onMouseLeave?,
-    ~onMouseUp?,
-    ~onTouchEnd?,
-    ~onTouchMove?,
-    ~onTouchStart?,
-    ~role?,
-    ~tabIndex=?
-      tabIndex->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~_TouchRippleProps?,
-    ~_type=?type_->(Belt.Option.map(v => type_ToJs(v))),
-    ~children?,
-    ~className?,
-    ~disableFocusRipple?,
-    ~edge=?edge->(Belt.Option.map(v => edgeToJs(v))),
-    ~checked?,
-    ~checkedIcon?,
-    ~color=?color->(Belt.Option.map(v => colorToJs(v))),
-    ~disabled?,
-    ~disableRipple?,
-    ~icon?,
-    ~id?,
-    ~indeterminate?,
-    ~indeterminateIcon?,
-    ~inputProps?,
-    ~onChange?,
-    ~required?,
-    ~size=?size->(Belt.Option.map(v => sizeToJs(v))),
-    ~value?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "Checkbox";
+  React.element =
+  "Checkbox";

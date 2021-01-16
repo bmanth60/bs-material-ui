@@ -23,10 +23,16 @@ export default function (
   const Parser = GetPropertyParser(type);
   if (Parser) {
     const parser = new Parser(argumentProperty, 'moduleOnly');
+    // Ensure mixed enum in union
+    if (parser.constructor.name === 'EnumParser') {
+      // @ts-ignore
+      parser.enumType = 'mixed';
+    }
     parser.parse();
 
     return parser;
   } else {
+    console.log(type);
     Console.error(
       `resolveArgument: Could not find parser for argument ${Console.colors.green}${originalProperty.component.name}/${originalProperty.name}/${name}/${type.name}${Console.colors.reset}`,
     );

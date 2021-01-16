@@ -1,58 +1,95 @@
-[@bs.deriving jsConverter]
-type type_ = [
-  | [@bs.as "submit"] `Submit
-  | [@bs.as "reset"] `Reset
-  | [@bs.as "button"] `Button
-];
-
-module Classes = {
-  type classesType =
-    | Root(string)
-    | Selected(string)
-    | IconOnly(string)
-    | Wrapper(string)
-    | Label(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | Selected(_) => "selected"
-    | IconOnly(_) => "iconOnly"
-    | Wrapper(_) => "wrapper"
-    | Label(_) => "label";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | Selected(className)
-                         | IconOnly(className)
-                         | Wrapper(className)
-                         | Label(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
 };
 
-[@bs.obj]
-external makePropsMui:
+module TabIndex: {
+  type t;
+  let int: int => t;
+  let float: float => t;
+  let string: string => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let string = (v: string) => Any(v);
+};
+
+module Type_enum: {
+  type t;
+  let button: t;
+  let reset: t;
+  let submit: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+
+  let button = Any("button");
+  let reset = Any("reset");
+  let submit = Any("submit");
+};
+
+module Type: {
+  type t;
+  let enum: Type_enum.t => t;
+  let string: string => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let enum = (v: Type_enum.t) => Any(v);
+  let string = (v: string) => Any(v);
+};
+
+module Classes = {
+  type t = {
+    .
+    "root": option(string),
+    "selected": option(string),
+    "iconOnly": option(string),
+    "wrapper": option(string),
+    "label": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~selected: string=?,
+      ~iconOnly: string=?,
+      ~wrapper: string=?,
+      ~label: string=?,
+      unit
+    ) =>
+    t;
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~centerRipple: bool=?,
-    ~component: 'union_r7ci=?,
+    ~component: Component.t=?,
     ~disabled: bool=?,
     ~disableRipple: bool=?,
     ~disableTouchRipple: bool=?,
     ~focusRipple: bool=?,
     ~focusVisibleClassName: string=?,
+    ~href: string=?,
     ~onBlur: ReactEvent.Focus.t => unit=?,
     ~onDragLeave: ReactEvent.Mouse.t => unit=?,
     ~onFocus: ReactEvent.Focus.t => unit=?,
-    ~onFocusVisible: 'genericCallback=?,
+    ~onFocusVisible: MaterialUi_Types.any=?,
     ~onKeyDown: ReactEvent.Keyboard.t => unit=?,
     ~onKeyUp: ReactEvent.Keyboard.t => unit=?,
     ~onMouseDown: ReactEvent.Mouse.t => unit=?,
@@ -61,11 +98,11 @@ external makePropsMui:
     ~onTouchEnd: ReactEvent.Touch.t => unit=?,
     ~onTouchMove: ReactEvent.Touch.t => unit=?,
     ~onTouchStart: ReactEvent.Touch.t => unit=?,
-    ~role: string=?,
-    ~tabIndex: 'union_r7ew=?,
+    ~tabIndex: TabIndex.t=?,
     ~_TouchRippleProps: Js.t({..})=?,
-    ~_type: string=?,
+    ~_type: Type.t=?,
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~icon: React.element=?,
     ~label: React.element=?,
@@ -73,106 +110,11 @@ external makePropsMui:
     ~onClick: ReactEvent.Mouse.t => unit=?,
     ~selected: bool=?,
     ~showLabel: bool=?,
-    ~value: 'any_rm0s=?,
+    ~value: MaterialUi_Types.any=?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~centerRipple: option(bool)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~disabled: option(bool)=?,
-      ~disableRipple: option(bool)=?,
-      ~disableTouchRipple: option(bool)=?,
-      ~focusRipple: option(bool)=?,
-      ~focusVisibleClassName: option(string)=?,
-      ~onBlur: option(ReactEvent.Focus.t => unit)=?,
-      ~onDragLeave: option(ReactEvent.Mouse.t => unit)=?,
-      ~onFocus: option(ReactEvent.Focus.t => unit)=?,
-      ~onFocusVisible: option('genericCallback)=?,
-      ~onKeyDown: option(ReactEvent.Keyboard.t => unit)=?,
-      ~onKeyUp: option(ReactEvent.Keyboard.t => unit)=?,
-      ~onMouseDown: option(ReactEvent.Mouse.t => unit)=?,
-      ~onMouseLeave: option(ReactEvent.Mouse.t => unit)=?,
-      ~onMouseUp: option(ReactEvent.Mouse.t => unit)=?,
-      ~onTouchEnd: option(ReactEvent.Touch.t => unit)=?,
-      ~onTouchMove: option(ReactEvent.Touch.t => unit)=?,
-      ~onTouchStart: option(ReactEvent.Touch.t => unit)=?,
-      ~role: option(string)=?,
-      ~tabIndex: option([ | `Int(int) | `Float(float) | `String(string)])=?,
-      ~_TouchRippleProps: option(Js.t({..}))=?,
-      ~type_: option(type_)=?,
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~icon: option(React.element)=?,
-      ~label: option(React.element)=?,
-      ~onChange: option(ReactEvent.Form.t => unit)=?,
-      ~onClick: option(ReactEvent.Mouse.t => unit)=?,
-      ~selected: option(bool)=?,
-      ~showLabel: option(bool)=?,
-      ~value: option('any_rm0s)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~centerRipple?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~disabled?,
-    ~disableRipple?,
-    ~disableTouchRipple?,
-    ~focusRipple?,
-    ~focusVisibleClassName?,
-    ~onBlur?,
-    ~onDragLeave?,
-    ~onFocus?,
-    ~onFocusVisible?,
-    ~onKeyDown?,
-    ~onKeyUp?,
-    ~onMouseDown?,
-    ~onMouseLeave?,
-    ~onMouseUp?,
-    ~onTouchEnd?,
-    ~onTouchMove?,
-    ~onTouchStart?,
-    ~role?,
-    ~tabIndex=?
-      tabIndex->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~_TouchRippleProps?,
-    ~_type=?type_->(Belt.Option.map(v => type_ToJs(v))),
-    ~children?,
-    ~className?,
-    ~icon?,
-    ~label?,
-    ~onChange?,
-    ~onClick?,
-    ~selected?,
-    ~showLabel?,
-    ~value?,
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "BottomNavigationAction";
+  React.element =
+  "BottomNavigationAction";

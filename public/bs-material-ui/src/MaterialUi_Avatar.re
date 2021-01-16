@@ -1,114 +1,67 @@
-[@bs.deriving jsConverter]
-type variant = [
-  | [@bs.as "circle"] `Circle
-  | [@bs.as "rounded"] `Rounded
-  | [@bs.as "square"] `Square
-];
-
 module Classes = {
-  type classesType =
-    | Root(string)
-    | ColorDefault(string)
-    | Circle(string)
-    | Rounded(string)
-    | Square(string)
-    | Img(string)
-    | Fallback(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | ColorDefault(_) => "colorDefault"
-    | Circle(_) => "circle"
-    | Rounded(_) => "rounded"
-    | Square(_) => "square"
-    | Img(_) => "img"
-    | Fallback(_) => "fallback";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | ColorDefault(className)
-                         | Circle(className)
-                         | Rounded(className)
-                         | Square(className)
-                         | Img(className)
-                         | Fallback(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "colorDefault": option(string),
+    "circle": option(string),
+    "rounded": option(string),
+    "square": option(string),
+    "img": option(string),
+    "fallback": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~colorDefault: string=?,
+      ~circle: string=?,
+      ~rounded: string=?,
+      ~square: string=?,
+      ~img: string=?,
+      ~fallback: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+type variant = [ | `Circle | `Rounded | `Square];
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~alt: string=?,
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
-    ~component: 'union_rii1=?,
+    ~component: Component.t=?,
     ~imgProps: Js.t({..})=?,
     ~sizes: string=?,
     ~src: string=?,
     ~srcSet: string=?,
-    ~variant: string=?,
+    ~variant: [@bs.string] [
+                | [@bs.as "circle"] `Circle
+                | [@bs.as "rounded"] `Rounded
+                | [@bs.as "square"] `Square
+              ]
+                =?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~alt: option(string)=?,
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~imgProps: option(Js.t({..}))=?,
-      ~sizes: option(string)=?,
-      ~src: option(string)=?,
-      ~srcSet: option(string)=?,
-      ~variant: option(variant)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~alt?,
-    ~children?,
-    ~className?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~imgProps?,
-    ~sizes?,
-    ~src?,
-    ~srcSet?,
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "Avatar";
+  React.element =
+  "Avatar";

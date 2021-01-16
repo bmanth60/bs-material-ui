@@ -19,8 +19,8 @@ module Breakpoint = {
   let getAsString = (theme: theme, breakpoint: breakpointDirection) => {
     let bpGet =
       switch (breakpoint) {
-      | `up(_) => MaterialUi_Theme.Breakpoints.upGet
-      | `down(_) => MaterialUi_Theme.Breakpoints.downGet
+      | `up(_) => (v => v.MaterialUi_Theme.up)
+      | `down(_) => (v => v.MaterialUi_Theme.down)
       };
     let bpValue =
       switch (breakpoint) {
@@ -37,9 +37,9 @@ module Breakpoint = {
       | `up(`int(x))
       | `down(`int(x)) => x->UNSAFE_INTERNAL.intToBreakpoint
       };
-    theme
-    ->MaterialUi_Theme.Theme.breakpointsGet
+    theme.breakpoints
     ->bpGet
+    ->MaterialUi_Types.anyUnpack
     ->UNSAFE_INTERNAL.jsonToBreakpointFunc(bpValue);
   };
 
@@ -56,3 +56,15 @@ external useMediaQueryString: string => bool = "useMediaQuery";
 
 [@bs.module "@material-ui/core"]
 external useMediaQuery: Breakpoint.t => bool = "useMediaQuery";
+
+module ServerStyleSheets = {
+  type t;
+  [@bs.module "@material-ui/core/styles"] [@bs.new]
+  external make: unit => t = "ServerStyleSheets";
+  [@bs.module "@material-ui/core/styles"] [@bs.new]
+  external makeWithOptions: Js.t({..}) => t = "ServerStyleSheets";
+
+  [@bs.send] external collect: (t, React.element) => React.element = "collect";
+  [@bs.send] external toString: t => string = "toString";
+  [@bs.send] external getStyleElement: t => React.element = "getStyleElement";
+};

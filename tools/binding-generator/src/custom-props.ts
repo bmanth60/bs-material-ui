@@ -239,6 +239,13 @@ export default {
       required: false,
       description: '-',
     },
+    rowSpan: {
+      type: {
+        name: 'int',
+      },
+      required: false,
+      description: '-',
+    },
   },
   TableRow: {
     onDoubleClick: {
@@ -247,48 +254,6 @@ export default {
       },
       required: false,
       description: '-',
-    },
-  },
-  Grid: {
-    xsAuto: {
-      type: {
-        name: 'bool',
-      },
-      required: false,
-      description: '-',
-      reasonOnly: true,
-    },
-    smAuto: {
-      type: {
-        name: 'bool',
-      },
-      required: false,
-      description: '-',
-      reasonOnly: true,
-    },
-    mdAuto: {
-      type: {
-        name: 'bool',
-      },
-      required: false,
-      description: '-',
-      reasonOnly: true,
-    },
-    lgAuto: {
-      type: {
-        name: 'bool',
-      },
-      required: false,
-      description: '-',
-      reasonOnly: true,
-    },
-    xlAuto: {
-      type: {
-        name: 'bool',
-      },
-      required: false,
-      description: '-',
-      reasonOnly: true,
     },
   },
   MuiThemeProvider: {
@@ -321,7 +286,36 @@ export default {
             {
               name: 'event',
               type: {
-                name: 'object',
+                name: 'custom',
+                reasonType: 'ReactEvent.Form.t',
+              },
+              required: true,
+            },
+            {
+              name: 'value',
+              type: { name: 'int' },
+              required: true,
+            },
+          ],
+          return: {
+            name: 'void',
+          },
+        },
+      },
+      required: false,
+      description: '-',
+    },
+    onChangeCommitted: {
+      type: {
+        name: 'signature',
+        type: 'function',
+        signature: {
+          arguments: [
+            {
+              name: 'event',
+              type: {
+                name: 'custom',
+                reasonType: 'ReactEvent.Form.t',
               },
               required: true,
             },
@@ -380,6 +374,192 @@ export default {
           { value: 'search', computed: false },
           { value: 'tag', computed: false },
         ],
+      },
+      required: false,
+      description: '-',
+    },
+  },
+  Collapse: {
+    mountOnEnter: {
+      type: {
+        name: 'boolean',
+      },
+      required: false,
+      description: '-',
+    },
+    unmountOnExit: {
+      type: {
+        name: 'boolean',
+      },
+      required: false,
+      description: '-',
+    },
+    appear: {
+      type: {
+        name: 'boolean',
+      },
+      required: false,
+      description: '-',
+    },
+    enter: {
+      type: {
+        name: 'boolean',
+      },
+      required: false,
+      description: '-',
+    },
+    exit: {
+      type: {
+        name: 'boolean',
+      },
+      required: false,
+      description: '-',
+    },
+  },
+
+  // --------------------- Lab
+
+  Rating: {
+    name: {
+      type: {
+        name: 'string',
+      },
+      required: false,
+      description: '-',
+    },
+  },
+
+  Pagination: {
+    renderItem: {
+      type: {
+        name: 'signature',
+        type: 'function',
+        raw: '',
+        signature: {
+          arguments: [
+            {
+              name: 'params',
+              type: {
+                name: 'shape',
+                value: {
+                  color: {
+                    name: 'enum',
+                    value: [
+                      { value: "'primary'", computed: false },
+                      { value: "'secondary'", computed: false },
+                      { value: "'standard'", computed: false },
+                    ],
+                    required: true,
+                  },
+                  shape: {
+                    name: 'enum',
+                    value: [
+                      { value: "'round'", computed: false },
+                      { value: "'rounded'", computed: false },
+                    ],
+                    required: true,
+                  },
+                  size: {
+                    name: 'enum',
+                    value: [
+                      { value: "'large'", computed: false },
+                      { value: "'medium'", computed: false },
+                      { value: "'small'", computed: false },
+                    ],
+                    required: true,
+                  },
+                  variant: {
+                    name: 'enum',
+                    value: [
+                      { value: "'outlined'", computed: false },
+                      { value: "'text'", computed: false },
+                    ],
+                    required: true,
+                  },
+                  page: { name: 'int' },
+                  selected: { name: 'boolean' },
+                  disabled: { name: 'boolean' },
+                },
+              },
+              required: true,
+            },
+          ],
+          return: {
+            name: 'Node',
+          },
+        },
+      },
+      required: false,
+      description: '-',
+    },
+  },
+  Autocomplete: {
+    getOptionDisabled: {
+      type: {
+        name: 'custom',
+        reasonType: "'t => bool",
+        jsType: "'t => bool",
+      },
+      required: false,
+      description: '-',
+    },
+    getOptionLabel: {
+      type: {
+        name: 'custom',
+        reasonType: "'t => string",
+        jsType: "'t => string",
+      },
+      required: false,
+      description: '-',
+    },
+    getOptionSelected: {
+      type: {
+        name: 'custom',
+        reasonType: "('t, 't) => string",
+        jsType: "('t, 't) => string",
+      },
+      required: false,
+      description: '-',
+    },
+    groupBy: {
+      type: {
+        name: 'custom',
+        reasonType: "'t => string",
+        jsType: "'t => string",
+      },
+      required: false,
+      description: '-',
+    },
+    renderOption: {
+      type: {
+        name: 'custom',
+        reasonType: "('t, Js.t({..})) => React.element",
+        jsType: "('t, Js.t({..})) => React.element",
+      },
+      required: false,
+      description: '-',
+    },
+    renderTags: {
+      type: {
+        name: 'custom',
+        reasonType: `(array('t), {. "index": int} => unit) => React.element`,
+        jsType: `(array('t), {. "index": int} => unit) => React.element`,
+      },
+      required: false,
+      description: '-',
+    },
+    value: {
+      type: {
+        name: 'any',
+      },
+      required: false,
+      description: '-',
+    },
+    onHighlightChange: {
+      type: {
+        name: 'custom',
+        reasonType: "(Js.t({..}), 't, string) => unit",
+        jsType: "(Js.t({..}), 't, string) => unit",
       },
       required: false,
       description: '-',

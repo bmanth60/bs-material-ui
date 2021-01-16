@@ -1,117 +1,73 @@
-[@bs.deriving jsConverter]
-type orientation = [
-  | [@bs.as "horizontal"] `Horizontal
-  | [@bs.as "vertical"] `Vertical
-];
-
-[@bs.deriving jsConverter]
-type variant = [
-  | [@bs.as "fullWidth"] `FullWidth
-  | [@bs.as "inset"] `Inset
-  | [@bs.as "middle"] `Middle
-];
-
 module Classes = {
-  type classesType =
-    | Root(string)
-    | Absolute(string)
-    | Inset(string)
-    | Light(string)
-    | Middle(string)
-    | Vertical(string)
-    | FlexItem(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | Absolute(_) => "absolute"
-    | Inset(_) => "inset"
-    | Light(_) => "light"
-    | Middle(_) => "middle"
-    | Vertical(_) => "vertical"
-    | FlexItem(_) => "flexItem";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | Absolute(className)
-                         | Inset(className)
-                         | Light(className)
-                         | Middle(className)
-                         | Vertical(className)
-                         | FlexItem(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "absolute": option(string),
+    "inset": option(string),
+    "light": option(string),
+    "middle": option(string),
+    "vertical": option(string),
+    "flexItem": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~absolute: string=?,
+      ~inset: string=?,
+      ~light: string=?,
+      ~middle: string=?,
+      ~vertical: string=?,
+      ~flexItem: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+type orientation = [ | `Horizontal | `Vertical];
+
+type variant = [ | `FullWidth | `Inset | `Middle];
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~absolute: bool=?,
+    ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
-    ~component: 'union_rypy=?,
+    ~component: Component.t=?,
     ~flexItem: bool=?,
     ~light: bool=?,
-    ~orientation: string=?,
+    ~orientation: [@bs.string] [
+                    | [@bs.as "horizontal"] `Horizontal
+                    | [@bs.as "vertical"] `Vertical
+                  ]
+                    =?,
     ~role: string=?,
-    ~variant: string=?,
+    ~variant: [@bs.string] [
+                | [@bs.as "fullWidth"] `FullWidth
+                | [@bs.as "inset"] `Inset
+                | [@bs.as "middle"] `Middle
+              ]
+                =?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~absolute: option(bool)=?,
-      ~className: option(string)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~flexItem: option(bool)=?,
-      ~light: option(bool)=?,
-      ~orientation: option(orientation)=?,
-      ~role: option(string)=?,
-      ~variant: option(variant)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~absolute?,
-    ~className?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~flexItem?,
-    ~light?,
-    ~orientation=?orientation->(Belt.Option.map(v => orientationToJs(v))),
-    ~role?,
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "Divider";
+  React.element =
+  "Divider";

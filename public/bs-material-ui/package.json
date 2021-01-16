@@ -1,14 +1,20 @@
 {
   "name": "@jsiebern/bs-material-ui",
-  "version": "1.2.0",
+  "version": "2.0.2",
   "description": "This library provides Reason bindings for material-ui.",
   "keywords": [
     "bucklescript",
+    "bucklescript-bindings",
     "reason",
+    "reasonml",
+    "reasonml-bindings",
     "ocaml",
-    "material-ui"
+    "material-ui",
+    "rescript",
+    "rescript-bindings",
+    "reason-react"
   ],
-  "homepage": "https://github.com/jsiebern/bs-material-ui",
+  "homepage": "https://jsiebern.github.io/bs-material-ui",
   "repository": "https://github.com/jsiebern/bs-material-ui",
   "bugs": "https://github.com/jsiebern/bs-material-ui/issues",
   "author": "Jonathan Siebern <jsiebern88@gmail.com>",
@@ -16,26 +22,31 @@
   "scripts": {
     "bs:build": "bsb -make-world",
     "bs:clean": "bsb -clean-world; rm -rf .cache",
-    "examples": "parcel examples/App/index.html",
-    "build": "./build.sh",
-    "code-mods": "cd examples; comby .re -templates ../code-mods . -matcher .re"
+    "examples": "parcel examples/App/index.html"
   },
   "files": [
     "/src",
     "/bsconfig.json"
   ],
   "peerDependencies": {
-    "@material-ui/core": "^4.8.1",
-    "reason-react": "^0.7.0"
+    "@material-ui/core": "^4.9.11",
+    "bs-platform": "^8.2.0",
+    "reason-react": "^0.9.1"
   },
   "devDependencies": {
-    "@jsiebern/bs-material-ui-ppx": "*",
-    "@material-ui/core": "^4.8.1",
-    "@material-ui/icons": "^4.1.0",
-    "@mscharley/bs-material-ui-icons": "^1.0.1",
-    "bs-platform": "7.3.0-dev.1",
+    "@babel/helper-call-delegate": "^7.10.4",
+    "@jsiebern/bs-material-ui-ppx": "^2.0.1",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@mscharley/bs-material-ui-icons": "^1.0.3",
+    "bs-platform": "^8.2.0",
     "bsb-js": "^1.1.7",
     "clsx": "^1.0.4",
-    "reason-react": "^0.7.0"
+    "reason-react": "^0.9.1"
+  },
+  "dependencies": {
+    "@jsiebern/bs-material-ui": "^2.0.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   }
 }

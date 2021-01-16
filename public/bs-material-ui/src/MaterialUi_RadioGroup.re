@@ -1,56 +1,43 @@
-[@bs.obj]
-external makePropsMui:
+module Classes = {
+  type t = {
+    .
+    "root": option(string),
+    "row": option(string),
+  };
+  [@bs.obj] external make: (~root: string=?, ~row: string=?, unit) => t;
+};
+
+module DefaultValue: {
+  type t;
+  let arrayOf: array(string) => t;
+  let int: int => t;
+  let float: float => t;
+  let string: string => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let arrayOf = (v: array(string)) => Any(v);
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let string = (v: string) => Any(v);
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~row: bool=?,
     ~id: string=?,
+    ~style: ReactDOMRe.Style.t=?,
     ~children: 'children=?,
-    ~defaultValue: 'union_rq1w=?,
+    ~defaultValue: DefaultValue.t=?,
     ~name: string=?,
-    ~onChange: 'any_r1f9=?,
-    ~value: 'any_rxc3=?,
+    ~onChange: ReactEvent.Form.t => unit=?,
+    ~value: MaterialUi_Types.any=?,
     ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    unit
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~className: option(string)=?,
-      ~row: option(bool)=?,
-      ~id: option(string)=?,
-      ~children: option('children)=?,
-      ~defaultValue:
-         option(
-           [
-             | `Array(array(string))
-             | `Int(int)
-             | `Float(float)
-             | `String(string)
-           ],
-         )=?,
-      ~name: option(string)=?,
-      ~onChange: option(ReactEvent.Form.t => unit)=?,
-      ~value: option('any_rxc3)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~className?,
-    ~row?,
-    ~id?,
-    ~children?,
-    ~defaultValue=?
-      defaultValue->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~name?,
-    ~onChange?,
-    ~value?,
-    ~key?,
-    ~ref?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "RadioGroup";
+  React.element =
+  "RadioGroup";

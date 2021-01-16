@@ -1,111 +1,80 @@
-[@bs.deriving jsConverter]
-type maxWidth = [
-  | [@bs.as "xs"] `Xs
-  | [@bs.as "sm"] `Sm
-  | [@bs.as "md"] `Md
-  | [@bs.as "lg"] `Lg
-  | [@bs.as "xl"] `Xl
-  | [@bs.as "false"] `False
-];
-
 module Classes = {
-  type classesType =
-    | Root(string)
-    | DisableGutters(string)
-    | Fixed(string)
-    | MaxWidthXs(string)
-    | MaxWidthSm(string)
-    | MaxWidthMd(string)
-    | MaxWidthLg(string)
-    | MaxWidthXl(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | DisableGutters(_) => "disableGutters"
-    | Fixed(_) => "fixed"
-    | MaxWidthXs(_) => "maxWidthXs"
-    | MaxWidthSm(_) => "maxWidthSm"
-    | MaxWidthMd(_) => "maxWidthMd"
-    | MaxWidthLg(_) => "maxWidthLg"
-    | MaxWidthXl(_) => "maxWidthXl";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | DisableGutters(className)
-                         | Fixed(className)
-                         | MaxWidthXs(className)
-                         | MaxWidthSm(className)
-                         | MaxWidthMd(className)
-                         | MaxWidthLg(className)
-                         | MaxWidthXl(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "disableGutters": option(string),
+    "fixed": option(string),
+    "maxWidthXs": option(string),
+    "maxWidthSm": option(string),
+    "maxWidthMd": option(string),
+    "maxWidthLg": option(string),
+    "maxWidthXl": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~disableGutters: string=?,
+      ~fixed: string=?,
+      ~maxWidthXs: string=?,
+      ~maxWidthSm: string=?,
+      ~maxWidthMd: string=?,
+      ~maxWidthLg: string=?,
+      ~maxWidthXl: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+module MaxWidth: {
+  type t;
+  let lg: t;
+  let md: t;
+  let sm: t;
+  let xl: t;
+  let xs: t;
+  let _false: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+
+  let lg = Any("lg");
+  let md = Any("md");
+  let sm = Any("sm");
+  let xl = Any("xl");
+  let xs = Any("xs");
+  let _false = Any(false);
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
-    ~component: 'union_rb3i=?,
+    ~component: Component.t=?,
     ~disableGutters: bool=?,
     ~fixed: bool=?,
-    ~maxWidth: string=?,
+    ~maxWidth: MaxWidth.t=?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~disableGutters: option(bool)=?,
-      ~fixed: option(bool)=?,
-      ~maxWidth: option(maxWidth)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~children?,
-    ~className?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~disableGutters?,
-    ~fixed?,
-    ~maxWidth=?maxWidth->(Belt.Option.map(v => maxWidthToJs(v))),
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "Container";
+  React.element =
+  "Container";

@@ -1,158 +1,101 @@
-[@bs.deriving jsConverter]
-type alignItems = [
-  | [@bs.as "flex-start"] `Flex_Start
-  | [@bs.as "center"] `Center
-];
+type alignItems = [ | `Flex_Start | `Center];
 
-module Classes = {
-  type classesType =
-    | Root(string)
-    | Gutters(string)
-    | Selected(string)
-    | Dense(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | Gutters(_) => "gutters"
-    | Selected(_) => "selected"
-    | Dense(_) => "dense";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | Gutters(className)
-                         | Selected(className)
-                         | Dense(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+module ContainerComponent: {
+  type t;
+  let string: string => t;
+  let containerComponent_func: MaterialUi_Types.any => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let containerComponent_func = (v: MaterialUi_Types.any) => Any(v);
+  let element = (v: React.element) => Any(v);
 };
 
-[@bs.obj]
-external makePropsMui:
+module Classes = {
+  type t = {
+    .
+    "root": option(string),
+    "gutters": option(string),
+    "selected": option(string),
+    "dense": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~gutters: string=?,
+      ~selected: string=?,
+      ~dense: string=?,
+      unit
+    ) =>
+    t;
+};
+
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+module Value: {
+  type t;
+  let string: string => t;
+  let int: int => t;
+  let float: float => t;
+  let arrayOf: array(string) => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let arrayOf = (v: array(string)) => Any(v);
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
-    ~alignItems: string=?,
+    ~alignItems: [@bs.string] [
+                   | [@bs.as "flex-start"] `Flex_Start
+                   | [@bs.as "center"] `Center
+                 ]
+                   =?,
     ~autoFocus: bool=?,
     ~button: bool=?,
-    ~_ContainerComponent: 'union_r9nx=?,
+    ~_ContainerComponent: ContainerComponent.t=?,
     ~_ContainerProps: Js.t({..})=?,
     ~divider: bool=?,
     ~focusVisibleClassName: string=?,
     ~id: string=?,
+    ~style: ReactDOMRe.Style.t=?,
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
-    ~component: 'union_raxi=?,
+    ~component: Component.t=?,
     ~dense: bool=?,
     ~disabled: bool=?,
     ~disableGutters: bool=?,
     ~_ListItemClasses: Js.t({..})=?,
     ~role: string=?,
     ~selected: bool=?,
-    ~tabIndex: 'number_o=?,
-    ~value: 'union_rl7e=?,
+    ~tabIndex: MaterialUi_Types.Number.t=?,
+    ~value: Value.t=?,
     ~onFocus: ReactEvent.Focus.t => unit=?,
     ~onClick: ReactEvent.Mouse.t => unit=?,
     ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
-    ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~alignItems: option(alignItems)=?,
-      ~autoFocus: option(bool)=?,
-      ~button: option(bool)=?,
-      ~_ContainerComponent:
-         option(
-           [
-             | `String(string)
-             | `Callback('genericCallback)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~_ContainerProps: option(Js.t({..}))=?,
-      ~divider: option(bool)=?,
-      ~focusVisibleClassName: option(string)=?,
-      ~id: option(string)=?,
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~dense: option(bool)=?,
-      ~disabled: option(bool)=?,
-      ~disableGutters: option(bool)=?,
-      ~_ListItemClasses: option(Js.t({..}))=?,
-      ~role: option(string)=?,
-      ~selected: option(bool)=?,
-      ~tabIndex: option([ | `Int(int) | `Float(float)])=?,
-      ~value:
-         option(
-           [
-             | `String(string)
-             | `Int(int)
-             | `Float(float)
-             | `Array(array(string))
-           ],
-         )=?,
-      ~onFocus: option(ReactEvent.Focus.t => unit)=?,
-      ~onClick: option(ReactEvent.Mouse.t => unit)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~alignItems=?alignItems->(Belt.Option.map(v => alignItemsToJs(v))),
-    ~autoFocus?,
-    ~button?,
-    ~_ContainerComponent=?
-      _ContainerComponent->(
-                             Belt.Option.map(v =>
-                               MaterialUi_Helpers.unwrapValue(v)
-                             )
-                           ),
-    ~_ContainerProps?,
-    ~divider?,
-    ~focusVisibleClassName?,
-    ~id?,
-    ~children?,
-    ~className?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~dense?,
-    ~disabled?,
-    ~disableGutters?,
-    ~_ListItemClasses?,
-    ~role?,
-    ~selected?,
-    ~tabIndex=?
-      tabIndex->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~value=?value->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~onFocus?,
-    ~onClick?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "MenuItem";
+  React.element =
+  "MenuItem";

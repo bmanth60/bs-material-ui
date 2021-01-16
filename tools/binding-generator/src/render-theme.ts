@@ -5,7 +5,7 @@ import Convert from '../../json-schema-parser/src_ts';
 import outputDirectory from './output';
 
 const RenderTheme = () => {
-  const path = Path.resolve(outputDirectory, 'json');
+  const path = Path.resolve(outputDirectory, 'json', 'core');
   const themePath = Path.join(path, 'theme.json');
   const themeOptionsPath = Path.join(path, 'theme-options.json');
 
@@ -24,15 +24,15 @@ const RenderTheme = () => {
       },
       {
         re: /Partial.*([a-zA-Z]*)Props>/m,
-        replaceWith: 'Js.Json.t',
+        replaceWith: 'MaterialUi_Types.any',
       },
       {
         re: /React\.>/m,
-        replaceWith: 'Js.Json.t',
+        replaceWith: 'MaterialUi_Types.any',
       },
       {
         re: /ComponentsProps/m,
-        replaceWith: 'Js.Json.t',
+        replaceWith: 'MaterialUi_Types.any',
       },
       {
         re: /HTML.*Element/m,
@@ -70,7 +70,7 @@ const RenderTheme = () => {
       },
       {
         re: /fontSize/m,
-        replaceWith: { type: 'string' },
+        replaceWith: { type: 'number' },
       },
       {
         re: /fontStyle/m,
@@ -101,7 +101,12 @@ const RenderTheme = () => {
     process.exit();
   };
 
-  const themeConvert = Convert(theme, 'Theme', options, onError);
+  const themeConvert = Convert(
+    theme,
+    'Theme',
+    { ...options, mode: 'records' },
+    onError,
+  );
   const themeOptionsConvert = Convert(
     themeOptions,
     'ThemeOptions',

@@ -1,92 +1,60 @@
-[@bs.deriving jsConverter]
-type direction = [
-  | [@bs.as "left"] `Left
-  | [@bs.as "right"] `Right
-  | [@bs.as "up"] `Up
-  | [@bs.as "down"] `Down
-];
+type direction = [ | `Down | `Left | `Right | `Up];
 
 module Timeout_shape = {
-  [@bs.deriving abstract]
   type t = {
-    [@bs.optional]
-    enter: [ | `Int(int) | `Float(float)],
-    [@bs.optional]
-    exit: [ | `Int(int) | `Float(float)],
+    .
+    "appear": option(MaterialUi_Types.Number.t),
+    "enter": option(MaterialUi_Types.Number.t),
+    "exit": option(MaterialUi_Types.Number.t),
   };
-  let make = t;
-
-  let unwrap = (obj: t) => {
-    let unwrappedMap = Js.Dict.empty();
-
-    switch (
-      obj->enterGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("enter", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    switch (
-      obj->exitGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("exit", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    unwrappedMap;
-  };
+  [@bs.obj]
+  external make:
+    (
+      ~appear: MaterialUi_Types.Number.t=?,
+      ~enter: MaterialUi_Types.Number.t=?,
+      ~exit: MaterialUi_Types.Number.t=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+module Timeout: {
+  type t;
+  let int: int => t;
+  let float: float => t;
+  let shape: Timeout_shape.t => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let shape = (v: Timeout_shape.t) => Any(v);
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
-    ~direction: string=?,
+    ~direction: [@bs.string] [
+                  | [@bs.as "down"] `Down
+                  | [@bs.as "left"] `Left
+                  | [@bs.as "right"] `Right
+                  | [@bs.as "up"] `Up
+                ]
+                  =?,
     ~_in: bool=?,
     ~onEnter: ReactEvent.Synthetic.t => unit=?,
+    ~onEntered: ReactEvent.Synthetic.t => unit=?,
     ~onEntering: ReactEvent.Synthetic.t => unit=?,
     ~onExit: ReactEvent.Synthetic.t => unit=?,
     ~onExited: ReactEvent.Synthetic.t => unit=?,
-    ~timeout: 'union_rrep=?,
+    ~onExiting: ReactEvent.Synthetic.t => unit=?,
+    ~style: ReactDOMRe.Style.t=?,
+    ~timeout: Timeout.t=?,
     ~id: string=?,
     ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    unit
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~direction: option(direction)=?,
-      ~in_: option(bool)=?,
-      ~onEnter: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onEntering: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExit: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExited: option(ReactEvent.Synthetic.t => unit)=?,
-      ~timeout:
-         option([ | `Int(int) | `Float(float) | `Object(Timeout_shape.t)])=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~children?,
-    ~direction=?direction->(Belt.Option.map(v => directionToJs(v))),
-    ~_in=?in_,
-    ~onEnter?,
-    ~onEntering?,
-    ~onExit?,
-    ~onExited?,
-    ~timeout=?
-      timeout->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~id?,
-    ~key?,
-    ~ref?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"] external make: React.component('a) = "Slide";
+  React.element =
+  "Slide";

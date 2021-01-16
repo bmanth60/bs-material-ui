@@ -20,6 +20,8 @@ interface PropType$Primitive {
     | 'Element<any>'
     | 'Function'
     | 'Node'
+    | 'ReactNode'
+    | 'HTMLElementType'
     | 'ComponentType<object>';
 }
 
@@ -27,8 +29,6 @@ interface PropType$Custom {
   name: 'custom';
   raw?: string;
   reasonType: string;
-  jsType?: string;
-  wrapJs?: (name: string) => string;
 }
 
 interface PropType$Literal {
@@ -97,6 +97,11 @@ interface PropType$ArrayOf {
   value: PropType;
 }
 
+interface PropType$InstanceOf {
+  name: 'instanceOf';
+  value: string;
+}
+
 interface PropType$Callback {
   name: 'func';
 }
@@ -125,4 +130,5 @@ declare type PropType =
   | PropType$ArrayOf
   | PropType$Callback
   | PropType$Shape
-  | PropType$Custom;
+  | PropType$Custom
+  | PropType$InstanceOf;

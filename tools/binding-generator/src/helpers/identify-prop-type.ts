@@ -12,10 +12,13 @@ export const isPrimitive = (
     'boolean',
     'bool',
     'any',
+    'HTMLElementType',
     'void',
     'Object',
     'String',
     'node',
+    'Node',
+    'ReactNode',
     'object',
     'element',
     'any',
@@ -24,9 +27,11 @@ export const isPrimitive = (
     'Element',
     'element',
     'Element<any>',
-    'Node',
     'ComponentType<object>',
   ].indexOf(prop.name) > -1;
+
+export const isInstanceOf = (prop: PropType): prop is PropType$InstanceOf =>
+  prop.name === 'instanceOf';
 
 export const isCustom = (prop: PropType): prop is PropType$Custom =>
   prop.name === 'custom';

@@ -1,135 +1,79 @@
-[@bs.deriving jsConverter]
-type position = [
-  | [@bs.as "bottom"] `Bottom
-  | [@bs.as "static"] `Static
-  | [@bs.as "top"] `Top
-];
-
-[@bs.deriving jsConverter]
-type variant = [
-  | [@bs.as "dots"] `Dots
-  | [@bs.as "progress"] `Progress
-  | [@bs.as "text"] `Text
-];
-
-module Classes = {
-  type classesType =
-    | Root(string)
-    | PositionBottom(string)
-    | PositionTop(string)
-    | PositionStatic(string)
-    | Dots(string)
-    | Dot(string)
-    | DotActive(string)
-    | Progress(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | PositionBottom(_) => "positionBottom"
-    | PositionTop(_) => "positionTop"
-    | PositionStatic(_) => "positionStatic"
-    | Dots(_) => "dots"
-    | Dot(_) => "dot"
-    | DotActive(_) => "dotActive"
-    | Progress(_) => "progress";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | PositionBottom(className)
-                         | PositionTop(className)
-                         | PositionStatic(className)
-                         | Dots(className)
-                         | Dot(className)
-                         | DotActive(className)
-                         | Progress(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
 };
 
-[@bs.obj]
-external makePropsMui:
+module Classes = {
+  type t = {
+    .
+    "root": option(string),
+    "positionBottom": option(string),
+    "positionTop": option(string),
+    "positionStatic": option(string),
+    "dots": option(string),
+    "dot": option(string),
+    "dotActive": option(string),
+    "progress": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~positionBottom: string=?,
+      ~positionTop: string=?,
+      ~positionStatic: string=?,
+      ~dots: string=?,
+      ~dot: string=?,
+      ~dotActive: string=?,
+      ~progress: string=?,
+      unit
+    ) =>
+    t;
+};
+
+type position = [ | `Bottom | `Static | `Top];
+
+type variant = [ | `Dots | `Progress | `Text];
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
-    ~component: 'union_ro8l=?,
-    ~elevation: 'number_q=?,
+    ~component: Component.t=?,
+    ~elevation: MaterialUi_Types.Number.t=?,
     ~square: bool=?,
-    ~activeStep: 'number_3=?,
+    ~activeStep: MaterialUi_Types.Number.t=?,
     ~backButton: React.element=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~_LinearProgressProps: Js.t({..})=?,
     ~nextButton: React.element=?,
-    ~position: string=?,
-    ~steps: 'number_c,
-    ~variant: string=?,
+    ~position: [@bs.string] [
+                 | [@bs.as "bottom"] `Bottom
+                 | [@bs.as "static"] `Static
+                 | [@bs.as "top"] `Top
+               ]
+                 =?,
+    ~steps: MaterialUi_Types.Number.t,
+    ~variant: [@bs.string] [
+                | [@bs.as "dots"] `Dots
+                | [@bs.as "progress"] `Progress
+                | [@bs.as "text"] `Text
+              ]
+                =?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~elevation: option([ | `Int(int) | `Float(float)])=?,
-      ~square: option(bool)=?,
-      ~activeStep: option([ | `Int(int) | `Float(float)])=?,
-      ~backButton: option(React.element)=?,
-      ~className: option(string)=?,
-      ~_LinearProgressProps: option(Js.t({..}))=?,
-      ~nextButton: option(React.element)=?,
-      ~position: option(position)=?,
-      ~steps: [ | `Int(int) | `Float(float)],
-      ~variant: option(variant)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~children?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~elevation=?
-      elevation->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~square?,
-    ~activeStep=?
-      activeStep->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~backButton?,
-    ~className?,
-    ~_LinearProgressProps?,
-    ~nextButton?,
-    ~position=?position->(Belt.Option.map(v => positionToJs(v))),
-    ~steps=MaterialUi_Helpers.unwrapValue(steps),
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "MobileStepper";
+  React.element =
+  "MobileStepper";

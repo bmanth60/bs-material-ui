@@ -1,66 +1,23 @@
 module Classes = {
-  type classesType =
-    | Root(string)
-    | Dividers(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | Dividers(_) => "dividers";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | Dividers(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "dividers": option(string),
+  };
+  [@bs.obj] external make: (~root: string=?, ~dividers: string=?, unit) => t;
 };
 
-[@bs.obj]
-external makePropsMui:
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~dividers: bool=?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~dividers: option(bool)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~children?,
-    ~className?,
-    ~dividers?,
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "DialogContent";
+  React.element =
+  "DialogContent";

@@ -1,137 +1,110 @@
-[@bs.deriving jsConverter]
-type color = [
-  | [@bs.as "default"] `Default
-  | [@bs.as "primary"] `Primary
-  | [@bs.as "secondary"] `Secondary
-];
-
-[@bs.deriving jsConverter]
-type size = [ | [@bs.as "small"] `Small | [@bs.as "medium"] `Medium];
-
-[@bs.deriving jsConverter]
-type variant = [
-  | [@bs.as "default"] `Default
-  | [@bs.as "outlined"] `Outlined
-];
-
 module Classes = {
-  type classesType =
-    | Root(string)
-    | SizeSmall(string)
-    | ColorPrimary(string)
-    | ColorSecondary(string)
-    | Disabled(string)
-    | Clickable(string)
-    | ClickableColorPrimary(string)
-    | ClickableColorSecondary(string)
-    | Deletable(string)
-    | DeletableColorPrimary(string)
-    | DeletableColorSecondary(string)
-    | Outlined(string)
-    | OutlinedPrimary(string)
-    | OutlinedSecondary(string)
-    | Avatar(string)
-    | AvatarSmall(string)
-    | AvatarColorPrimary(string)
-    | AvatarColorSecondary(string)
-    | Icon(string)
-    | IconSmall(string)
-    | IconColorPrimary(string)
-    | IconColorSecondary(string)
-    | Label(string)
-    | LabelSmall(string)
-    | DeleteIcon(string)
-    | DeleteIconSmall(string)
-    | DeleteIconColorPrimary(string)
-    | DeleteIconColorSecondary(string)
-    | DeleteIconOutlinedColorPrimary(string)
-    | DeleteIconOutlinedColorSecondary(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | SizeSmall(_) => "sizeSmall"
-    | ColorPrimary(_) => "colorPrimary"
-    | ColorSecondary(_) => "colorSecondary"
-    | Disabled(_) => "disabled"
-    | Clickable(_) => "clickable"
-    | ClickableColorPrimary(_) => "clickableColorPrimary"
-    | ClickableColorSecondary(_) => "clickableColorSecondary"
-    | Deletable(_) => "deletable"
-    | DeletableColorPrimary(_) => "deletableColorPrimary"
-    | DeletableColorSecondary(_) => "deletableColorSecondary"
-    | Outlined(_) => "outlined"
-    | OutlinedPrimary(_) => "outlinedPrimary"
-    | OutlinedSecondary(_) => "outlinedSecondary"
-    | Avatar(_) => "avatar"
-    | AvatarSmall(_) => "avatarSmall"
-    | AvatarColorPrimary(_) => "avatarColorPrimary"
-    | AvatarColorSecondary(_) => "avatarColorSecondary"
-    | Icon(_) => "icon"
-    | IconSmall(_) => "iconSmall"
-    | IconColorPrimary(_) => "iconColorPrimary"
-    | IconColorSecondary(_) => "iconColorSecondary"
-    | Label(_) => "label"
-    | LabelSmall(_) => "labelSmall"
-    | DeleteIcon(_) => "deleteIcon"
-    | DeleteIconSmall(_) => "deleteIconSmall"
-    | DeleteIconColorPrimary(_) => "deleteIconColorPrimary"
-    | DeleteIconColorSecondary(_) => "deleteIconColorSecondary"
-    | DeleteIconOutlinedColorPrimary(_) => "deleteIconOutlinedColorPrimary"
-    | DeleteIconOutlinedColorSecondary(_) => "deleteIconOutlinedColorSecondary";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | SizeSmall(className)
-                         | ColorPrimary(className)
-                         | ColorSecondary(className)
-                         | Disabled(className)
-                         | Clickable(className)
-                         | ClickableColorPrimary(className)
-                         | ClickableColorSecondary(className)
-                         | Deletable(className)
-                         | DeletableColorPrimary(className)
-                         | DeletableColorSecondary(className)
-                         | Outlined(className)
-                         | OutlinedPrimary(className)
-                         | OutlinedSecondary(className)
-                         | Avatar(className)
-                         | AvatarSmall(className)
-                         | AvatarColorPrimary(className)
-                         | AvatarColorSecondary(className)
-                         | Icon(className)
-                         | IconSmall(className)
-                         | IconColorPrimary(className)
-                         | IconColorSecondary(className)
-                         | Label(className)
-                         | LabelSmall(className)
-                         | DeleteIcon(className)
-                         | DeleteIconSmall(className)
-                         | DeleteIconColorPrimary(className)
-                         | DeleteIconColorSecondary(className)
-                         | DeleteIconOutlinedColorPrimary(className)
-                         | DeleteIconOutlinedColorSecondary(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "sizeSmall": option(string),
+    "colorPrimary": option(string),
+    "colorSecondary": option(string),
+    "disabled": option(string),
+    "clickable": option(string),
+    "clickableColorPrimary": option(string),
+    "clickableColorSecondary": option(string),
+    "deletable": option(string),
+    "deletableColorPrimary": option(string),
+    "deletableColorSecondary": option(string),
+    "outlined": option(string),
+    "outlinedPrimary": option(string),
+    "outlinedSecondary": option(string),
+    "avatar": option(string),
+    "avatarSmall": option(string),
+    "avatarColorPrimary": option(string),
+    "avatarColorSecondary": option(string),
+    "icon": option(string),
+    "iconSmall": option(string),
+    "iconColorPrimary": option(string),
+    "iconColorSecondary": option(string),
+    "label": option(string),
+    "labelSmall": option(string),
+    "deleteIcon": option(string),
+    "deleteIconSmall": option(string),
+    "deleteIconColorPrimary": option(string),
+    "deleteIconColorSecondary": option(string),
+    "deleteIconOutlinedColorPrimary": option(string),
+    "deleteIconOutlinedColorSecondary": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~sizeSmall: string=?,
+      ~colorPrimary: string=?,
+      ~colorSecondary: string=?,
+      ~disabled: string=?,
+      ~clickable: string=?,
+      ~clickableColorPrimary: string=?,
+      ~clickableColorSecondary: string=?,
+      ~deletable: string=?,
+      ~deletableColorPrimary: string=?,
+      ~deletableColorSecondary: string=?,
+      ~outlined: string=?,
+      ~outlinedPrimary: string=?,
+      ~outlinedSecondary: string=?,
+      ~avatar: string=?,
+      ~avatarSmall: string=?,
+      ~avatarColorPrimary: string=?,
+      ~avatarColorSecondary: string=?,
+      ~icon: string=?,
+      ~iconSmall: string=?,
+      ~iconColorPrimary: string=?,
+      ~iconColorSecondary: string=?,
+      ~label: string=?,
+      ~labelSmall: string=?,
+      ~deleteIcon: string=?,
+      ~deleteIconSmall: string=?,
+      ~deleteIconColorPrimary: string=?,
+      ~deleteIconColorSecondary: string=?,
+      ~deleteIconOutlinedColorPrimary: string=?,
+      ~deleteIconOutlinedColorSecondary: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+type color = [ | `Default | `Primary | `Secondary];
+
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+type size = [ | `Medium | `Small];
+
+type variant = [ | `Default | `Outlined];
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~avatar: React.element=?,
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~clickable: bool=?,
-    ~color: string=?,
-    ~component: 'union_rnkm=?,
+    ~color: [@bs.string] [
+              | [@bs.as "default"] `Default
+              | [@bs.as "primary"] `Primary
+              | [@bs.as "secondary"] `Secondary
+            ]
+              =?,
+    ~component: Component.t=?,
     ~deleteIcon: React.element=?,
     ~disabled: bool=?,
     ~icon: React.element=?,
@@ -140,73 +113,20 @@ external makePropsMui:
     ~onDelete: ReactEvent.Synthetic.t => unit=?,
     ~onKeyDown: ReactEvent.Keyboard.t => unit=?,
     ~onKeyUp: ReactEvent.Keyboard.t => unit=?,
-    ~size: string=?,
-    ~variant: string=?,
+    ~size: [@bs.string] [
+             | [@bs.as "medium"] `Medium
+             | [@bs.as "small"] `Small
+           ]
+             =?,
+    ~variant: [@bs.string] [
+                | [@bs.as "default"] `Default
+                | [@bs.as "outlined"] `Outlined
+              ]
+                =?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~avatar: option(React.element)=?,
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~clickable: option(bool)=?,
-      ~color: option(color)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~deleteIcon: option(React.element)=?,
-      ~disabled: option(bool)=?,
-      ~icon: option(React.element)=?,
-      ~label: option(React.element)=?,
-      ~onClick: option(ReactEvent.Mouse.t => unit)=?,
-      ~onDelete: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onKeyDown: option(ReactEvent.Keyboard.t => unit)=?,
-      ~onKeyUp: option(ReactEvent.Keyboard.t => unit)=?,
-      ~size: option(size)=?,
-      ~variant: option(variant)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~avatar?,
-    ~children?,
-    ~className?,
-    ~clickable?,
-    ~color=?color->(Belt.Option.map(v => colorToJs(v))),
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~deleteIcon?,
-    ~disabled?,
-    ~icon?,
-    ~label?,
-    ~onClick?,
-    ~onDelete?,
-    ~onKeyDown?,
-    ~onKeyUp?,
-    ~size=?size->(Belt.Option.map(v => sizeToJs(v))),
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"] external make: React.component('a) = "Chip";
+  React.element =
+  "Chip";

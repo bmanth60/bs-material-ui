@@ -1,131 +1,162 @@
-[@bs.deriving jsConverter]
-type maxWidth = [
-  | [@bs.as "lg"] `Lg
-  | [@bs.as "md"] `Md
-  | [@bs.as "sm"] `Sm
-  | [@bs.as "xl"] `Xl
-  | [@bs.as "xs"] `Xs
-  | [@bs.as "false"] `False
-];
+module BackdropComponent: {
+  type t;
+  let string: string => t;
+  let backdropComponent_func: MaterialUi_Types.any => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let backdropComponent_func = (v: MaterialUi_Types.any) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
 
-[@bs.deriving jsConverter]
-type scroll = [ | [@bs.as "body"] `Body | [@bs.as "paper"] `Paper];
-
-module TransitionDuration_shape = {
-  [@bs.deriving abstract]
-  type t = {
-    [@bs.optional]
-    appear: [ | `Int(int) | `Float(float)],
-    [@bs.optional]
-    enter: [ | `Int(int) | `Float(float)],
-    [@bs.optional]
-    exit: [ | `Int(int) | `Float(float)],
-  };
-  let make = t;
-
-  let unwrap = (obj: t) => {
-    let unwrappedMap = Js.Dict.empty();
-
-    switch (
-      obj
-      ->appearGet
-      ->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("appear", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    switch (
-      obj->enterGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("enter", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    switch (
-      obj->exitGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("exit", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    unwrappedMap;
-  };
+module Container: {
+  type t;
+  let custom: Dom.element => t;
+  let element: React.element => t;
+  let container_func: MaterialUi_Types.any => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let custom = (v: Dom.element) => Any(v);
+  let element = (v: React.element) => Any(v);
+  let container_func = (v: MaterialUi_Types.any) => Any(v);
 };
 
 module Classes = {
-  type classesType =
-    | Root(string)
-    | ScrollPaper(string)
-    | ScrollBody(string)
-    | Container(string)
-    | Paper(string)
-    | PaperScrollPaper(string)
-    | PaperScrollBody(string)
-    | PaperWidthFalse(string)
-    | PaperWidthXs(string)
-    | PaperWidthSm(string)
-    | PaperWidthMd(string)
-    | PaperWidthLg(string)
-    | PaperWidthXl(string)
-    | PaperFullWidth(string)
-    | PaperFullScreen(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | ScrollPaper(_) => "scrollPaper"
-    | ScrollBody(_) => "scrollBody"
-    | Container(_) => "container"
-    | Paper(_) => "paper"
-    | PaperScrollPaper(_) => "paperScrollPaper"
-    | PaperScrollBody(_) => "paperScrollBody"
-    | PaperWidthFalse(_) => "paperWidthFalse"
-    | PaperWidthXs(_) => "paperWidthXs"
-    | PaperWidthSm(_) => "paperWidthSm"
-    | PaperWidthMd(_) => "paperWidthMd"
-    | PaperWidthLg(_) => "paperWidthLg"
-    | PaperWidthXl(_) => "paperWidthXl"
-    | PaperFullWidth(_) => "paperFullWidth"
-    | PaperFullScreen(_) => "paperFullScreen";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | ScrollPaper(className)
-                         | ScrollBody(className)
-                         | Container(className)
-                         | Paper(className)
-                         | PaperScrollPaper(className)
-                         | PaperScrollBody(className)
-                         | PaperWidthFalse(className)
-                         | PaperWidthXs(className)
-                         | PaperWidthSm(className)
-                         | PaperWidthMd(className)
-                         | PaperWidthLg(className)
-                         | PaperWidthXl(className)
-                         | PaperFullWidth(className)
-                         | PaperFullScreen(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "scrollPaper": option(string),
+    "scrollBody": option(string),
+    "container": option(string),
+    "paper": option(string),
+    "paperScrollPaper": option(string),
+    "paperScrollBody": option(string),
+    "paperWidthFalse": option(string),
+    "paperWidthXs": option(string),
+    "paperWidthSm": option(string),
+    "paperWidthMd": option(string),
+    "paperWidthLg": option(string),
+    "paperWidthXl": option(string),
+    "paperFullWidth": option(string),
+    "paperFullScreen": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~scrollPaper: string=?,
+      ~scrollBody: string=?,
+      ~container: string=?,
+      ~paper: string=?,
+      ~paperScrollPaper: string=?,
+      ~paperScrollBody: string=?,
+      ~paperWidthFalse: string=?,
+      ~paperWidthXs: string=?,
+      ~paperWidthSm: string=?,
+      ~paperWidthMd: string=?,
+      ~paperWidthLg: string=?,
+      ~paperWidthXl: string=?,
+      ~paperFullWidth: string=?,
+      ~paperFullScreen: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+module MaxWidth: {
+  type t;
+  let lg: t;
+  let md: t;
+  let sm: t;
+  let xl: t;
+  let xs: t;
+  let _false: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+
+  let lg = Any("lg");
+  let md = Any("md");
+  let sm = Any("sm");
+  let xl = Any("xl");
+  let xs = Any("xs");
+  let _false = Any(false);
+};
+
+module PaperComponent: {
+  type t;
+  let string: string => t;
+  let paperComponent_func: MaterialUi_Types.any => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let paperComponent_func = (v: MaterialUi_Types.any) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+type scroll = [ | `Body | `Paper];
+
+module TransitionComponent: {
+  type t;
+  let string: string => t;
+  let transitionComponent_func: MaterialUi_Types.any => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let transitionComponent_func = (v: MaterialUi_Types.any) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+module TransitionDuration_shape = {
+  type t = {
+    .
+    "appear": option(MaterialUi_Types.Number.t),
+    "enter": option(MaterialUi_Types.Number.t),
+    "exit": option(MaterialUi_Types.Number.t),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~appear: MaterialUi_Types.Number.t=?,
+      ~enter: MaterialUi_Types.Number.t=?,
+      ~exit: MaterialUi_Types.Number.t=?,
+      unit
+    ) =>
+    t;
+};
+
+module TransitionDuration: {
+  type t;
+  let int: int => t;
+  let float: float => t;
+  let shape: TransitionDuration_shape.t => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let shape = (v: TransitionDuration_shape.t) => Any(v);
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
-    ~_BackdropComponent: 'union_ry8i=?,
+    ~_BackdropComponent: BackdropComponent.t=?,
     ~closeAfterTransition: bool=?,
-    ~container: 'union_rpoc=?,
+    ~container: Container.t=?,
     ~disableAutoFocus: bool=?,
     ~disableEnforceFocus: bool=?,
     ~disablePortal: bool=?,
@@ -139,14 +170,15 @@ external makePropsMui:
     ~aria_labelledby: string=?,
     ~_BackdropProps: Js.t({..})=?,
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~disableBackdropClick: bool=?,
     ~disableEscapeKeyDown: bool=?,
     ~fullScreen: bool=?,
     ~fullWidth: bool=?,
-    ~maxWidth: string=?,
+    ~maxWidth: MaxWidth.t=?,
     ~onBackdropClick: ReactEvent.Mouse.t => unit=?,
-    ~onClose: 'any_r80g=?,
+    ~onClose: (ReactEvent.Synthetic.t, string) => unit=?,
     ~onEnter: ReactEvent.Synthetic.t => unit=?,
     ~onEntered: ReactEvent.Synthetic.t => unit=?,
     ~onEntering: ReactEvent.Synthetic.t => unit=?,
@@ -155,166 +187,17 @@ external makePropsMui:
     ~onExited: ReactEvent.Synthetic.t => unit=?,
     ~onExiting: ReactEvent.Synthetic.t => unit=?,
     ~_open: bool,
-    ~_PaperComponent: 'union_rwyx=?,
+    ~_PaperComponent: PaperComponent.t=?,
     ~_PaperProps: Js.t({..})=?,
-    ~scroll: string=?,
-    ~_TransitionComponent: 'union_rl3v=?,
-    ~transitionDuration: 'union_rcmw=?,
+    ~scroll: [@bs.string] [ | [@bs.as "body"] `Body | [@bs.as "paper"] `Paper]
+               =?,
+    ~_TransitionComponent: TransitionComponent.t=?,
+    ~transitionDuration: TransitionDuration.t=?,
     ~_TransitionProps: Js.t({..})=?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~_BackdropComponent:
-         option(
-           [
-             | `String(string)
-             | `Callback('genericCallback)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~closeAfterTransition: option(bool)=?,
-      ~container:
-         option(
-           [ | `ObjectGeneric(Js.t({..})) | `Callback('genericCallback)],
-         )=?,
-      ~disableAutoFocus: option(bool)=?,
-      ~disableEnforceFocus: option(bool)=?,
-      ~disablePortal: option(bool)=?,
-      ~disableRestoreFocus: option(bool)=?,
-      ~disableScrollLock: option(bool)=?,
-      ~hideBackdrop: option(bool)=?,
-      ~keepMounted: option(bool)=?,
-      ~manager: option(Js.t({..}))=?,
-      ~onRendered: option(ReactEvent.Synthetic.t => unit)=?,
-      ~aria_describedby: option(string)=?,
-      ~aria_labelledby: option(string)=?,
-      ~_BackdropProps: option(Js.t({..}))=?,
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~disableBackdropClick: option(bool)=?,
-      ~disableEscapeKeyDown: option(bool)=?,
-      ~fullScreen: option(bool)=?,
-      ~fullWidth: option(bool)=?,
-      ~maxWidth: option(maxWidth)=?,
-      ~onBackdropClick: option(ReactEvent.Mouse.t => unit)=?,
-      ~onClose: option((ReactEvent.Synthetic.t, string) => unit)=?,
-      ~onEnter: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onEntered: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onEntering: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onEscapeKeyDown: option(ReactEvent.Keyboard.t => unit)=?,
-      ~onExit: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExited: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExiting: option(ReactEvent.Synthetic.t => unit)=?,
-      ~open_: bool,
-      ~_PaperComponent:
-         option(
-           [
-             | `String(string)
-             | `Callback('genericCallback)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~_PaperProps: option(Js.t({..}))=?,
-      ~scroll: option(scroll)=?,
-      ~_TransitionComponent:
-         option(
-           [
-             | `String(string)
-             | `Callback('genericCallback)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~transitionDuration:
-         option(
-           [
-             | `Int(int)
-             | `Float(float)
-             | `Object(TransitionDuration_shape.t)
-           ],
-         )=?,
-      ~_TransitionProps: option(Js.t({..}))=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~_BackdropComponent=?
-      _BackdropComponent->(
-                            Belt.Option.map(v =>
-                              MaterialUi_Helpers.unwrapValue(v)
-                            )
-                          ),
-    ~closeAfterTransition?,
-    ~container=?
-      container->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~disableAutoFocus?,
-    ~disableEnforceFocus?,
-    ~disablePortal?,
-    ~disableRestoreFocus?,
-    ~disableScrollLock?,
-    ~hideBackdrop?,
-    ~keepMounted?,
-    ~manager?,
-    ~onRendered?,
-    ~aria_describedby?,
-    ~aria_labelledby?,
-    ~_BackdropProps?,
-    ~children?,
-    ~className?,
-    ~disableBackdropClick?,
-    ~disableEscapeKeyDown?,
-    ~fullScreen?,
-    ~fullWidth?,
-    ~maxWidth=?maxWidth->(Belt.Option.map(v => maxWidthToJs(v))),
-    ~onBackdropClick?,
-    ~onClose?,
-    ~onEnter?,
-    ~onEntered?,
-    ~onEntering?,
-    ~onEscapeKeyDown?,
-    ~onExit?,
-    ~onExited?,
-    ~onExiting?,
-    ~_open=open_,
-    ~_PaperComponent=?
-      _PaperComponent->(
-                         Belt.Option.map(v =>
-                           MaterialUi_Helpers.unwrapValue(v)
-                         )
-                       ),
-    ~_PaperProps?,
-    ~scroll=?scroll->(Belt.Option.map(v => scrollToJs(v))),
-    ~_TransitionComponent=?
-      _TransitionComponent->(
-                              Belt.Option.map(v =>
-                                MaterialUi_Helpers.unwrapValue(v)
-                              )
-                            ),
-    ~transitionDuration=?
-      transitionDuration->(
-                            Belt.Option.map(v =>
-                              MaterialUi_Helpers.unwrapValue(v)
-                            )
-                          ),
-    ~_TransitionProps?,
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "Dialog";
+  React.element =
+  "Dialog";

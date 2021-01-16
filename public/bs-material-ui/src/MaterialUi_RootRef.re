@@ -1,23 +1,11 @@
-[@bs.obj]
-external makePropsMui:
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
     ~id: string=?,
+    ~style: ReactDOMRe.Style.t=?,
     ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    unit
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      (),
-    ) =>
-  makePropsMui(~children?, ~id?, ~key?, ~ref?, ());
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "RootRef";
+  React.element =
+  "RootRef";

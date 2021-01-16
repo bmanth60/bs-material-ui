@@ -11,7 +11,70 @@ export const isNumeric = (obj: any) => {
   );
 };
 
-export const reservedNames = ['type', 'open', 'in', 'to', 'for'];
+export const reservedNames = [
+  'and',
+  'as',
+  'asr',
+  'assert',
+  'begin',
+  'class',
+  'constraint',
+  'do',
+  'done',
+  'downto',
+  'else',
+  'end',
+  'esfun',
+  'exception',
+  'external',
+  'false',
+  'for',
+  'fun',
+  'function',
+  'functor',
+  'if',
+  'in',
+  'include',
+  'inherit',
+  'initializer',
+  'land',
+  'lazy',
+  'let',
+  'lor',
+  'lsl',
+  'lsr',
+  'lxor',
+  'match',
+  'method',
+  'mod',
+  'module',
+  'mutable',
+  'new',
+  'nonrec',
+  'object',
+  'of',
+  'open',
+  'open!',
+  'or',
+  'pri',
+  'private',
+  'pub',
+  'public',
+  'rec',
+  'sig',
+  'struct',
+  'switch',
+  'then',
+  'to',
+  'true',
+  'try',
+  'type',
+  'val',
+  'virtual',
+  'when',
+  'while',
+  'with',
+];
 
 const GenerateReasonName = (str: string, toUpper: boolean = true) => {
   if (toUpper) {
@@ -30,7 +93,7 @@ const GenerateReasonName = (str: string, toUpper: boolean = true) => {
     str = str.replace('@', '');
   }
   if (reservedNames.indexOf(str) > -1) {
-    str = `${str}_`;
+    str = `_${str}`;
   }
 
   if (isNumeric(str)) {

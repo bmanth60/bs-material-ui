@@ -1,114 +1,69 @@
-[@bs.deriving jsConverter]
-type position = [ | [@bs.as "start"] `Start | [@bs.as "end"] `End];
-
-[@bs.deriving jsConverter]
-type variant = [
-  | [@bs.as "standard"] `Standard
-  | [@bs.as "outlined"] `Outlined
-  | [@bs.as "filled"] `Filled
-];
-
 module Classes = {
-  type classesType =
-    | Root(string)
-    | Filled(string)
-    | PositionStart(string)
-    | PositionEnd(string)
-    | DisablePointerEvents(string)
-    | HiddenLabel(string)
-    | MarginDense(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | Filled(_) => "filled"
-    | PositionStart(_) => "positionStart"
-    | PositionEnd(_) => "positionEnd"
-    | DisablePointerEvents(_) => "disablePointerEvents"
-    | HiddenLabel(_) => "hiddenLabel"
-    | MarginDense(_) => "marginDense";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | Filled(className)
-                         | PositionStart(className)
-                         | PositionEnd(className)
-                         | DisablePointerEvents(className)
-                         | HiddenLabel(className)
-                         | MarginDense(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "filled": option(string),
+    "positionStart": option(string),
+    "positionEnd": option(string),
+    "disablePointerEvents": option(string),
+    "hiddenLabel": option(string),
+    "marginDense": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~filled: string=?,
+      ~positionStart: string=?,
+      ~positionEnd: string=?,
+      ~disablePointerEvents: string=?,
+      ~hiddenLabel: string=?,
+      ~marginDense: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+module Component: {
+  type t;
+  let string: string => t;
+  let callback: (unit => React.element) => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let callback = (v: unit => React.element) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+type position = [ | `Start | `End];
+
+type variant = [ | `Standard | `Outlined | `Filled];
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
-    ~component: 'union_rbjr=?,
+    ~component: Component.t=?,
     ~disablePointerEvents: bool=?,
     ~disableTypography: bool=?,
     ~muiFormControl: Js.t({..})=?,
-    ~position: string=?,
-    ~variant: string=?,
+    ~position: [@bs.string] [ | [@bs.as "start"] `Start | [@bs.as "end"] `End]
+                 =?,
+    ~variant: [@bs.string] [
+                | [@bs.as "standard"] `Standard
+                | [@bs.as "outlined"] `Outlined
+                | [@bs.as "filled"] `Filled
+              ]
+                =?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~component:
-         option(
-           [
-             | `String(string)
-             | `Callback(unit => React.element)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~disablePointerEvents: option(bool)=?,
-      ~disableTypography: option(bool)=?,
-      ~muiFormControl: option(Js.t({..}))=?,
-      ~position: option(position)=?,
-      ~variant: option(variant)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~children?,
-    ~className?,
-    ~component=?
-      component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~disablePointerEvents?,
-    ~disableTypography?,
-    ~muiFormControl?,
-    ~position=?position->(Belt.Option.map(v => positionToJs(v))),
-    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "InputAdornment";
+  React.element =
+  "InputAdornment";

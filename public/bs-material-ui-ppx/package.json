@@ -1,23 +1,26 @@
 {
-	"name": "@jsiebern/bs-material-ui-ppx",
-	"repository": {
-		"url": "jsiebern/reason-mui-withstyles-ppx",
-		"type": "git"
-	},
-	"private": false,
-	"homepage": "https://github.com/jsiebern/bs-material-ui/tree/master/public/bs-material-ui-ppx",
-	"bugs": "https://github.com/jsiebern/bs-material-ui/issues",
-	"version": "1.0.6",
-	"author": "Jonathan Siebern <jsiebern88@gmail.com>",
-	"license": "MIT",
-	"scripts": {
-		"postinstall": "node ./copyPlatformBinaryInPlace.js"
-	},
-	"keywords": [ "Reason" ],
-	"description": "This is a ppx for using the withStyles component in @jsiebern/bs-material-ui",
-	"dependencies": {},
-	"devDependencies": {},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "@jsiebern/bs-material-ui-ppx",
+  "version": "2.0.1",
+  "repository": "https://github.com/jsiebern/bs-material-ui",
+  "private": false,
+  "homepage": "https://jsiebern.github.io/bs-material-ui",
+  "bugs": "https://github.com/jsiebern/bs-material-ui/issues",
+  "author": "Jonathan Siebern <jsiebern88@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "node ./copyPlatformBinaryInPlace.js"
+  },
+  "keywords": [
+    "Reason"
+  ],
+  "description": "This is a ppx for using the withStyles component in @jsiebern/bs-material-ui",
+  "peerDependencies": {
+    "@material-ui/core": "^4.9.11",
+    "reason-react": "^0.9.1",
+    "bs-platform": "^8.2.0",
+    "@jsiebern/bs-material-ui": "^2.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,105 +1,52 @@
-[@bs.deriving jsConverter]
-type labelPlacement = [
-  | [@bs.as "end"] `End
-  | [@bs.as "start"] `Start
-  | [@bs.as "top"] `Top
-  | [@bs.as "bottom"] `Bottom
-];
-
 module Classes = {
-  type classesType =
-    | Root(string)
-    | LabelPlacementStart(string)
-    | LabelPlacementTop(string)
-    | LabelPlacementBottom(string)
-    | Disabled(string)
-    | Label(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | LabelPlacementStart(_) => "labelPlacementStart"
-    | LabelPlacementTop(_) => "labelPlacementTop"
-    | LabelPlacementBottom(_) => "labelPlacementBottom"
-    | Disabled(_) => "disabled"
-    | Label(_) => "label";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | LabelPlacementStart(className)
-                         | LabelPlacementTop(className)
-                         | LabelPlacementBottom(className)
-                         | Disabled(className)
-                         | Label(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "labelPlacementStart": option(string),
+    "labelPlacementTop": option(string),
+    "labelPlacementBottom": option(string),
+    "disabled": option(string),
+    "label": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~labelPlacementStart: string=?,
+      ~labelPlacementTop: string=?,
+      ~labelPlacementBottom: string=?,
+      ~disabled: string=?,
+      ~label: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+type labelPlacement = [ | `Bottom | `End | `Start | `Top];
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~checked: bool=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
-    ~control: React.element=?,
+    ~control: React.element,
     ~disabled: bool=?,
     ~label: React.element=?,
-    ~labelPlacement: string=?,
+    ~labelPlacement: [@bs.string] [
+                       | [@bs.as "bottom"] `Bottom
+                       | [@bs.as "end"] `End
+                       | [@bs.as "start"] `Start
+                       | [@bs.as "top"] `Top
+                     ]
+                       =?,
     ~name: string=?,
-    ~onChange: 'any_rk41=?,
-    ~value: 'any_r6uh=?,
+    ~onChange: ReactEvent.Form.t => unit=?,
+    ~value: MaterialUi_Types.any=?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~checked: option(bool)=?,
-      ~className: option(string)=?,
-      ~control: option(React.element)=?,
-      ~disabled: option(bool)=?,
-      ~label: option(React.element)=?,
-      ~labelPlacement: option(labelPlacement)=?,
-      ~name: option(string)=?,
-      ~onChange: option(ReactEvent.Form.t => unit)=?,
-      ~value: option('any_r6uh)=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~checked?,
-    ~className?,
-    ~control?,
-    ~disabled?,
-    ~label?,
-    ~labelPlacement=?
-      labelPlacement->(Belt.Option.map(v => labelPlacementToJs(v))),
-    ~name?,
-    ~onChange?,
-    ~value?,
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "FormControlLabel";
+  React.element =
+  "FormControlLabel";

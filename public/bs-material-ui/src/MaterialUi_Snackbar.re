@@ -1,147 +1,129 @@
-[@bs.deriving jsConverter]
-type horizontal = [
-  | [@bs.as "center"] `Center
-  | [@bs.as "left"] `Left
-  | [@bs.as "right"] `Right
-];
+module Horizontal: {
+  type t;
+  let center: t;
+  let left: t;
+  let right: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
 
-[@bs.deriving jsConverter]
-type vertical = [ | [@bs.as "bottom"] `Bottom | [@bs.as "top"] `Top];
-
-module AnchorOrigin = {
-  [@bs.deriving abstract]
-  type t = {
-    horizontal,
-    vertical,
-  };
-  let make = t;
-
-  let unwrap = (obj: option(t)) => {
-    switch (obj) {
-    | Some(obj) =>
-      let unwrappedMap = Js.Dict.empty();
-
-      unwrappedMap->(
-                      Js.Dict.set(
-                        "horizontal",
-                        horizontalToJs(obj->horizontalGet)
-                        ->MaterialUi_Helpers.toJsUnsafe,
-                      )
-                    );
-
-      unwrappedMap->(
-                      Js.Dict.set(
-                        "vertical",
-                        verticalToJs(obj->verticalGet)
-                        ->MaterialUi_Helpers.toJsUnsafe,
-                      )
-                    );
-
-      Some(unwrappedMap);
-    | None => None
-    };
-  };
+  let center = Any("center");
+  let left = Any("left");
+  let right = Any("right");
 };
 
-module TransitionDuration_shape = {
-  [@bs.deriving abstract]
+module Vertical: {
+  type t;
+  let bottom: t;
+  let top: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+
+  let bottom = Any("bottom");
+  let top = Any("top");
+};
+
+module AnchorOrigin = {
   type t = {
-    [@bs.optional]
-    appear: [ | `Int(int) | `Float(float)],
-    [@bs.optional]
-    enter: [ | `Int(int) | `Float(float)],
-    [@bs.optional]
-    exit: [ | `Int(int) | `Float(float)],
+    .
+    "horizontal": option(Horizontal.t),
+    "vertical": option(Vertical.t),
   };
-  let make = t;
-
-  let unwrap = (obj: t) => {
-    let unwrappedMap = Js.Dict.empty();
-
-    switch (
-      obj
-      ->appearGet
-      ->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("appear", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    switch (
-      obj->enterGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("enter", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    switch (
-      obj->exitGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("exit", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    unwrappedMap;
-  };
+  [@bs.obj]
+  external make:
+    (~horizontal: Horizontal.t=?, ~vertical: Vertical.t=?, unit) => t;
 };
 
 module Classes = {
-  type classesType =
-    | Root(string)
-    | AnchorOriginTopCenter(string)
-    | AnchorOriginBottomCenter(string)
-    | AnchorOriginTopRight(string)
-    | AnchorOriginBottomRight(string)
-    | AnchorOriginTopLeft(string)
-    | AnchorOriginBottomLeft(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | AnchorOriginTopCenter(_) => "anchorOriginTopCenter"
-    | AnchorOriginBottomCenter(_) => "anchorOriginBottomCenter"
-    | AnchorOriginTopRight(_) => "anchorOriginTopRight"
-    | AnchorOriginBottomRight(_) => "anchorOriginBottomRight"
-    | AnchorOriginTopLeft(_) => "anchorOriginTopLeft"
-    | AnchorOriginBottomLeft(_) => "anchorOriginBottomLeft";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | AnchorOriginTopCenter(className)
-                         | AnchorOriginBottomCenter(className)
-                         | AnchorOriginTopRight(className)
-                         | AnchorOriginBottomRight(className)
-                         | AnchorOriginTopLeft(className)
-                         | AnchorOriginBottomLeft(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "anchorOriginTopCenter": option(string),
+    "anchorOriginBottomCenter": option(string),
+    "anchorOriginTopRight": option(string),
+    "anchorOriginBottomRight": option(string),
+    "anchorOriginTopLeft": option(string),
+    "anchorOriginBottomLeft": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~anchorOriginTopCenter: string=?,
+      ~anchorOriginBottomCenter: string=?,
+      ~anchorOriginTopRight: string=?,
+      ~anchorOriginBottomRight: string=?,
+      ~anchorOriginTopLeft: string=?,
+      ~anchorOriginBottomLeft: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+module TransitionComponent: {
+  type t;
+  let string: string => t;
+  let transitionComponent_func: MaterialUi_Types.any => t;
+  let element: React.element => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let string = (v: string) => Any(v);
+  let transitionComponent_func = (v: MaterialUi_Types.any) => Any(v);
+  let element = (v: React.element) => Any(v);
+};
+
+module TransitionDuration_shape = {
+  type t = {
+    .
+    "appear": option(MaterialUi_Types.Number.t),
+    "enter": option(MaterialUi_Types.Number.t),
+    "exit": option(MaterialUi_Types.Number.t),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~appear: MaterialUi_Types.Number.t=?,
+      ~enter: MaterialUi_Types.Number.t=?,
+      ~exit: MaterialUi_Types.Number.t=?,
+      unit
+    ) =>
+    t;
+};
+
+module TransitionDuration: {
+  type t;
+  let int: int => t;
+  let float: float => t;
+  let shape: TransitionDuration_shape.t => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let shape = (v: TransitionDuration_shape.t) => Any(v);
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~action: React.element=?,
-    ~anchorOrigin: 'any_rzz6=?,
-    ~autoHideDuration: 'number_w=?,
+    ~anchorOrigin: AnchorOrigin.t=?,
+    ~autoHideDuration: MaterialUi_Types.Number.t=?,
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~_ClickAwayListenerProps: Js.t({..})=?,
     ~_ContentProps: Js.t({..})=?,
     ~disableWindowBlurListener: bool=?,
     ~key: string=?,
     ~message: React.element=?,
-    ~onClose: 'any_rfjg=?,
+    ~onClose: (ReactEvent.Synthetic.t, string) => unit=?,
     ~onEnter: ReactEvent.Synthetic.t => unit=?,
     ~onEntered: ReactEvent.Synthetic.t => unit=?,
     ~onEntering: ReactEvent.Synthetic.t => unit=?,
@@ -151,115 +133,13 @@ external makePropsMui:
     ~onMouseEnter: ReactEvent.Mouse.t => unit=?,
     ~onMouseLeave: ReactEvent.Mouse.t => unit=?,
     ~_open: bool=?,
-    ~resumeHideDuration: 'number_d=?,
-    ~_TransitionComponent: 'union_rdvs=?,
-    ~transitionDuration: 'union_rg0m=?,
+    ~resumeHideDuration: MaterialUi_Types.Number.t=?,
+    ~_TransitionComponent: TransitionComponent.t=?,
+    ~transitionDuration: TransitionDuration.t=?,
     ~_TransitionProps: Js.t({..})=?,
     ~id: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~action: option(React.element)=?,
-      ~anchorOrigin: option(AnchorOrigin.t)=?,
-      ~autoHideDuration: option([ | `Int(int) | `Float(float)])=?,
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~_ClickAwayListenerProps: option(Js.t({..}))=?,
-      ~_ContentProps: option(Js.t({..}))=?,
-      ~disableWindowBlurListener: option(bool)=?,
-      ~key: option(string)=?,
-      ~message: option(React.element)=?,
-      ~onClose: option((ReactEvent.Synthetic.t, string) => unit)=?,
-      ~onEnter: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onEntered: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onEntering: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExit: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExited: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExiting: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onMouseEnter: option(ReactEvent.Mouse.t => unit)=?,
-      ~onMouseLeave: option(ReactEvent.Mouse.t => unit)=?,
-      ~open_: option(bool)=?,
-      ~resumeHideDuration: option([ | `Int(int) | `Float(float)])=?,
-      ~_TransitionComponent:
-         option(
-           [
-             | `String(string)
-             | `Callback('genericCallback)
-             | `Element(React.element)
-           ],
-         )=?,
-      ~transitionDuration:
-         option(
-           [
-             | `Int(int)
-             | `Float(float)
-             | `Object(TransitionDuration_shape.t)
-           ],
-         )=?,
-      ~_TransitionProps: option(Js.t({..}))=?,
-      ~id: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~action?,
-    ~anchorOrigin=?AnchorOrigin.unwrap(anchorOrigin),
-    ~autoHideDuration=?
-      autoHideDuration->(
-                          Belt.Option.map(v =>
-                            MaterialUi_Helpers.unwrapValue(v)
-                          )
-                        ),
-    ~children?,
-    ~className?,
-    ~_ClickAwayListenerProps?,
-    ~_ContentProps?,
-    ~disableWindowBlurListener?,
-    ~key?,
-    ~message?,
-    ~onClose?,
-    ~onEnter?,
-    ~onEntered?,
-    ~onEntering?,
-    ~onExit?,
-    ~onExited?,
-    ~onExiting?,
-    ~onMouseEnter?,
-    ~onMouseLeave?,
-    ~_open=?open_,
-    ~resumeHideDuration=?
-      resumeHideDuration->(
-                            Belt.Option.map(v =>
-                              MaterialUi_Helpers.unwrapValue(v)
-                            )
-                          ),
-    ~_TransitionComponent=?
-      _TransitionComponent->(
-                              Belt.Option.map(v =>
-                                MaterialUi_Helpers.unwrapValue(v)
-                              )
-                            ),
-    ~transitionDuration=?
-      transitionDuration->(
-                            Belt.Option.map(v =>
-                              MaterialUi_Helpers.unwrapValue(v)
-                            )
-                          ),
-    ~_TransitionProps?,
-    ~id?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "Snackbar";
+  React.element =
+  "Snackbar";

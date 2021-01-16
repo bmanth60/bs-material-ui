@@ -1,44 +1,32 @@
 module Classes = {
-  type classesType =
-    | Root(string)
-    | Multiline(string)
-    | Dense(string)
-    | Inset(string)
-    | Primary(string)
-    | Secondary(string);
-  type t = list(classesType);
-  let to_string =
-    fun
-    | Root(_) => "root"
-    | Multiline(_) => "multiline"
-    | Dense(_) => "dense"
-    | Inset(_) => "inset"
-    | Primary(_) => "primary"
-    | Secondary(_) => "secondary";
-  let to_obj = listOfClasses =>
-    listOfClasses->(
-                     Belt.List.reduce(
-                       Js.Dict.empty(),
-                       (obj, classType) => {
-                         switch (classType) {
-                         | Root(className)
-                         | Multiline(className)
-                         | Dense(className)
-                         | Inset(className)
-                         | Primary(className)
-                         | Secondary(className) =>
-                           Js.Dict.set(obj, to_string(classType), className)
-                         };
-                         obj;
-                       },
-                     )
-                   );
+  type t = {
+    .
+    "root": option(string),
+    "multiline": option(string),
+    "dense": option(string),
+    "inset": option(string),
+    "primary": option(string),
+    "secondary": option(string),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~root: string=?,
+      ~multiline: string=?,
+      ~dense: string=?,
+      ~inset: string=?,
+      ~primary: string=?,
+      ~secondary: string=?,
+      unit
+    ) =>
+    t;
 };
 
-[@bs.obj]
-external makePropsMui:
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
+    ~classes: Classes.t=?,
     ~className: string=?,
     ~disableTypography: bool=?,
     ~inset: bool=?,
@@ -47,47 +35,9 @@ external makePropsMui:
     ~secondary: React.element=?,
     ~secondaryTypographyProps: Js.t({..})=?,
     ~id: string=?,
-    ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    ~classes: Js.Dict.t(string)=?,
     ~style: ReactDOMRe.Style.t=?,
-    unit
+    ~key: string=?,
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~className: option(string)=?,
-      ~disableTypography: option(bool)=?,
-      ~inset: option(bool)=?,
-      ~primary: option(React.element)=?,
-      ~primaryTypographyProps: option(Js.t({..}))=?,
-      ~secondary: option(React.element)=?,
-      ~secondaryTypographyProps: option(Js.t({..}))=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      ~classes: option(Classes.t)=?,
-      ~style: option(ReactDOMRe.Style.t)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~children?,
-    ~className?,
-    ~disableTypography?,
-    ~inset?,
-    ~primary?,
-    ~primaryTypographyProps?,
-    ~secondary?,
-    ~secondaryTypographyProps?,
-    ~id?,
-    ~key?,
-    ~ref?,
-    ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
-    ~style?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"]
-external make: React.component('a) = "ListItemText";
+  React.element =
+  "ListItemText";

@@ -1,108 +1,65 @@
-[@bs.deriving jsConverter]
-type timeout_enum = [ | [@bs.as "auto"] `Auto];
+module Timeout_enum: {
+  type t;
+  let auto: t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
 
-module Timeout_shape = {
-  [@bs.deriving abstract]
-  type t = {
-    [@bs.optional]
-    appear: [ | `Int(int) | `Float(float)],
-    [@bs.optional]
-    enter: [ | `Int(int) | `Float(float)],
-    [@bs.optional]
-    exit: [ | `Int(int) | `Float(float)],
-  };
-  let make = t;
-
-  let unwrap = (obj: t) => {
-    let unwrappedMap = Js.Dict.empty();
-
-    switch (
-      obj
-      ->appearGet
-      ->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("appear", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    switch (
-      obj->enterGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("enter", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    switch (
-      obj->exitGet->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v)))
-    ) {
-    | Some(v) =>
-      unwrappedMap->(Js.Dict.set("exit", v->MaterialUi_Helpers.toJsUnsafe))
-    | None => ()
-    };
-
-    unwrappedMap;
-  };
+  let auto = Any("auto");
 };
 
-[@bs.obj]
-external makePropsMui:
+module Timeout_shape = {
+  type t = {
+    .
+    "appear": option(MaterialUi_Types.Number.t),
+    "enter": option(MaterialUi_Types.Number.t),
+    "exit": option(MaterialUi_Types.Number.t),
+  };
+  [@bs.obj]
+  external make:
+    (
+      ~appear: MaterialUi_Types.Number.t=?,
+      ~enter: MaterialUi_Types.Number.t=?,
+      ~exit: MaterialUi_Types.Number.t=?,
+      unit
+    ) =>
+    t;
+};
+
+module Timeout: {
+  type t;
+  let enum: Timeout_enum.t => t;
+  let int: int => t;
+  let float: float => t;
+  let shape: Timeout_shape.t => t;
+} = {
+  [@unboxed]
+  type t =
+    | Any('a): t;
+  let enum = (v: Timeout_enum.t) => Any(v);
+  let int = (v: int) => Any(v);
+  let float = (v: float) => Any(v);
+  let shape = (v: Timeout_shape.t) => Any(v);
+};
+
+[@react.component] [@bs.module "@material-ui/core"]
+external make:
   (
     ~children: 'children=?,
+    ~disableStrictModeCompat: bool=?,
     ~_in: bool=?,
     ~onEnter: ReactEvent.Synthetic.t => unit=?,
+    ~onEntered: ReactEvent.Synthetic.t => unit=?,
+    ~onEntering: ReactEvent.Synthetic.t => unit=?,
     ~onExit: ReactEvent.Synthetic.t => unit=?,
-    ~timeout: 'union_r9cl=?,
+    ~onExited: ReactEvent.Synthetic.t => unit=?,
+    ~onExiting: ReactEvent.Synthetic.t => unit=?,
+    ~style: ReactDOMRe.Style.t=?,
+    ~timeout: Timeout.t=?,
     ~id: string=?,
     ~key: string=?,
-    ~ref: ReactDOMRe.domRef=?,
-    unit
+    ~ref: ReactDOMRe.domRef=?
   ) =>
-  _;
-
-let makeProps =
-    (
-      ~children: option('children)=?,
-      ~in_: option(bool)=?,
-      ~onEnter: option(ReactEvent.Synthetic.t => unit)=?,
-      ~onExit: option(ReactEvent.Synthetic.t => unit)=?,
-      ~timeout:
-         option(
-           [
-             | `Enum(timeout_enum)
-             | `Int(int)
-             | `Float(float)
-             | `Object(Timeout_shape.t)
-           ],
-         )=?,
-      ~id: option(string)=?,
-      ~key: option(string)=?,
-      ~ref: option(ReactDOMRe.domRef)=?,
-      (),
-    ) =>
-  makePropsMui(
-    ~children?,
-    ~_in=?in_,
-    ~onEnter?,
-    ~onExit?,
-    ~timeout=?
-      timeout->(
-                 Belt.Option.map(v =>
-                   switch (v) {
-                   | `Enum(v) =>
-                     MaterialUi_Helpers.unwrapValue(
-                       `String(timeout_enumToJs(v)),
-                     )
-
-                   | v => MaterialUi_Helpers.unwrapValue(v)
-                   }
-                 )
-               ),
-    ~id?,
-    ~key?,
-    ~ref?,
-    (),
-  );
-
-[@bs.module "@material-ui/core"] external make: React.component('a) = "Grow";
+  React.element =
+  "Grow";
