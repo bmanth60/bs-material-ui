@@ -18,8 +18,7 @@
     "bs:clean": "bsb -clean-world; rm -rf .cache",
     "examples": "parcel examples/App/index.html",
     "build": "./build.sh",
-    "code-mods": "cd examples; comby .re -templates ../code-mods . -matcher .re",
-    "prepare": "npm run bs:build"
+    "code-mods": "cd examples; comby .re -templates ../code-mods . -matcher .re"
   },
   "files": [
     "/src",
