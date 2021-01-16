@@ -123,12 +123,12 @@ module Classes = {
 [@bs.obj]
 external makePropsMui:
   (
-    ~anchorOrigin: 'any_rmg2=?,
+    ~anchorOrigin: 'any_rj81=?,
     ~badgeContent: React.element=?,
     ~children: 'children=?,
     ~className: string=?,
     ~color: string=?,
-    ~component: 'union_rdue=?,
+    ~component: 'union_ry41=?,
     ~invisible: bool=?,
     ~max: 'number_8=?,
     ~overlap: string=?,
@@ -175,14 +175,14 @@ let makeProps =
     ~badgeContent?,
     ~children?,
     ~className?,
-    ~color=?color->Belt.Option.map(v => colorToJs(v)),
+    ~color=?color->(Belt.Option.map(v => colorToJs(v))),
     ~component=?
       component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~invisible?,
     ~max=?max->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~overlap=?overlap->Belt.Option.map(v => overlapToJs(v)),
+    ~overlap=?overlap->(Belt.Option.map(v => overlapToJs(v))),
     ~showZero?,
-    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
+    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
     ~id?,
     ~key?,
     ~ref?,

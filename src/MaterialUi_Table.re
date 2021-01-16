@@ -38,7 +38,7 @@ external makePropsMui:
   (
     ~children: 'children=?,
     ~className: string=?,
-    ~component: 'union_rbco=?,
+    ~component: 'union_r9q2=?,
     ~padding: string=?,
     ~size: string=?,
     ~stickyHeader: bool=?,
@@ -78,8 +78,8 @@ let makeProps =
     ~className?,
     ~component=?
       component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~padding=?padding->Belt.Option.map(v => paddingToJs(v)),
-    ~size=?size->Belt.Option.map(v => sizeToJs(v)),
+    ~padding=?padding->(Belt.Option.map(v => paddingToJs(v))),
+    ~size=?size->(Belt.Option.map(v => sizeToJs(v))),
     ~stickyHeader?,
     ~id?,
     ~key?,

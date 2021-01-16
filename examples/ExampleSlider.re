@@ -22,7 +22,7 @@ let make = () => {
           <Typography gutterBottom=true> "Volume" </Typography>
           <Grid container=true spacing=V2 alignItems=`Center>
             <Grid item=true> <VolumeUp /> </Grid>
-            <Grid item=true xs=`True>
+            <Grid item=true xsAuto=true>
               <Slider
                 value={`Int(value)}
                 onChange={(_, v) => setValue(v)}

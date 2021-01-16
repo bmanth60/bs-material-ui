@@ -1,3 +1,9 @@
+[@bs.deriving jsConverter]
+type orientation = [
+  | [@bs.as "horizontal"] `Horizontal
+  | [@bs.as "vertical"] `Vertical
+];
+
 module Classes = {
   type classesType =
     | Root(string)
@@ -53,13 +59,19 @@ module Classes = {
 [@bs.obj]
 external makePropsMui:
   (
+    ~active: bool=?,
+    ~alternativeLabel: bool=?,
     ~children: 'children=?,
     ~className: string=?,
+    ~completed: bool=?,
     ~disabled: bool=?,
     ~error: bool=?,
+    ~expanded: bool=?,
     ~icon: React.element=?,
+    ~last: bool=?,
     ~optional: React.element=?,
-    ~_StepIconComponent: 'union_rn44=?,
+    ~orientation: string=?,
+    ~_StepIconComponent: 'union_rx7z=?,
     ~_StepIconProps: Js.t({..})=?,
     ~id: string=?,
     ~key: string=?,
@@ -72,12 +84,18 @@ external makePropsMui:
 
 let makeProps =
     (
+      ~active: option(bool)=?,
+      ~alternativeLabel: option(bool)=?,
       ~children: option('children)=?,
       ~className: option(string)=?,
+      ~completed: option(bool)=?,
       ~disabled: option(bool)=?,
       ~error: option(bool)=?,
+      ~expanded: option(bool)=?,
       ~icon: option(React.element)=?,
+      ~last: option(bool)=?,
       ~optional: option(React.element)=?,
+      ~orientation: option(orientation)=?,
       ~_StepIconComponent:
          option(
            [
@@ -95,12 +113,26 @@ let makeProps =
       (),
     ) =>
   makePropsMui(
+    ~active?,
+    ~alternativeLabel?,
     ~children?,
     ~className?,
+    ~completed?,
     ~disabled?,
     ~error?,
+    ~expanded?,
     ~icon?,
+    ~last?,
     ~optional?,
+    ~orientation=?
+      orientation->(
+                     Belt.Option.map(v =>
+                       switch (v->Obj.magic->Js.Json.classify) {
+                       | JSONString(str) => str
+                       | _ => orientationToJs(v)
+                       }
+                     )
+                   ),
     ~_StepIconComponent=?
       _StepIconComponent->(
                             Belt.Option.map(v =>

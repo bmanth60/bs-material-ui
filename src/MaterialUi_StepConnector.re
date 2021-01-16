@@ -1,3 +1,9 @@
+[@bs.deriving jsConverter]
+type orientation = [
+  | [@bs.as "horizontal"] `Horizontal
+  | [@bs.as "vertical"] `Vertical
+];
+
 module Classes = {
   type classesType =
     | Root(string)
@@ -50,7 +56,13 @@ module Classes = {
 [@bs.obj]
 external makePropsMui:
   (
+    ~active: bool=?,
+    ~alternativeLabel: bool=?,
     ~className: string=?,
+    ~completed: bool=?,
+    ~disabled: bool=?,
+    ~index: 'number_3=?,
+    ~orientation: string=?,
     ~id: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
@@ -62,7 +74,13 @@ external makePropsMui:
 
 let makeProps =
     (
+      ~active: option(bool)=?,
+      ~alternativeLabel: option(bool)=?,
       ~className: option(string)=?,
+      ~completed: option(bool)=?,
+      ~disabled: option(bool)=?,
+      ~index: option([ | `Int(int) | `Float(float)])=?,
+      ~orientation: option(orientation)=?,
       ~id: option(string)=?,
       ~key: option(string)=?,
       ~ref: option(ReactDOMRe.domRef)=?,
@@ -71,7 +89,21 @@ let makeProps =
       (),
     ) =>
   makePropsMui(
+    ~active?,
+    ~alternativeLabel?,
     ~className?,
+    ~completed?,
+    ~disabled?,
+    ~index=?index->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
+    ~orientation=?
+      orientation->(
+                     Belt.Option.map(v =>
+                       switch (v->Obj.magic->Js.Json.classify) {
+                       | JSONString(str) => str
+                       | _ => orientationToJs(v)
+                       }
+                     )
+                   ),
     ~id?,
     ~key?,
     ~ref?,

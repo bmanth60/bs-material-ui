@@ -562,21 +562,11 @@ module ContainerClassKey = {
   let make = t;
 };
 
-module Global = {
-  [@bs.deriving abstract]
-  type t = {
-    [@bs.optional] [@bs.as "@font-face"]
-    fontFace: Js.Json.t,
-  };
-
-  let make = t;
-};
-
 module MuiCssBaseline = {
   [@bs.deriving abstract]
   type t = {
     [@bs.optional] [@bs.as "@global"]
-    global: Global.t,
+    global: ReactDOMRe.Style.t,
   };
 
   let make = t;
@@ -1092,11 +1082,11 @@ module SvgIconClassKey = {
     [@bs.optional] [@bs.as "colorSecondary"]
     colorSecondary: string,
     [@bs.optional] [@bs.as "fontSizeInherit"]
-    fontSizeInherit: float,
+    fontSizeInherit: string,
     [@bs.optional] [@bs.as "fontSizeLarge"]
-    fontSizeLarge: float,
+    fontSizeLarge: string,
     [@bs.optional] [@bs.as "fontSizeSmall"]
-    fontSizeSmall: float,
+    fontSizeSmall: string,
     [@bs.optional] [@bs.as "root"]
     root: ReactDOMRe.Style.t,
   };
@@ -2616,18 +2606,6 @@ module TypeText = {
   let make = t;
 };
 
-module TonalOffset = {
-  [@bs.deriving abstract]
-  type t = {
-    [@bs.as "dark"]
-    dark: float,
-    [@bs.as "light"]
-    light: float,
-  };
-
-  let make = t;
-};
-
 module Palette = {
   [@bs.deriving abstract]
   type t = {
@@ -2660,7 +2638,7 @@ module Palette = {
     [@bs.as "text"]
     text: TypeText.t,
     [@bs.as "tonalOffset"]
-    tonalOffset: TonalOffset.t,
+    tonalOffset: float,
     [@bs.as "type"]
     type_: string,
     [@bs.as "warning"]
@@ -2744,7 +2722,7 @@ module Typography = {
     [@bs.as "fontFamily"]
     fontFamily: string,
     [@bs.as "fontSize"]
-    fontSize: float,
+    fontSize: string,
     [@bs.as "fontWeightBold"]
     fontWeightBold: string,
     [@bs.as "fontWeightLight"]

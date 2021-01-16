@@ -35,116 +35,50 @@ type justify = [
   | [@bs.as "space-evenly"] `Space_Evenly
 ];
 
-module Lg = {
-  type t = [
-    | `False
-    | `Auto
-    | `True
-    | `V1
-    | `V2
-    | `V3
-    | `V4
-    | `V5
-    | `V6
-    | `V7
-    | `V8
-    | `V9
-    | `V10
-    | `V11
-    | `V12
-  ];
-  let tToJs =
-    fun
-    | `False => false->Obj.magic
-    | `Auto => "auto"->Obj.magic
-    | `True => true->Obj.magic
-    | `V1 => 1->Obj.magic
-    | `V2 => 2->Obj.magic
-    | `V3 => 3->Obj.magic
-    | `V4 => 4->Obj.magic
-    | `V5 => 5->Obj.magic
-    | `V6 => 6->Obj.magic
-    | `V7 => 7->Obj.magic
-    | `V8 => 8->Obj.magic
-    | `V9 => 9->Obj.magic
-    | `V10 => 10->Obj.magic
-    | `V11 => 11->Obj.magic
-    | `V12 => 12->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type lg =
+  | [@bs.as 1] V1
+  | [@bs.as 2] V2
+  | [@bs.as 3] V3
+  | [@bs.as 4] V4
+  | [@bs.as 5] V5
+  | [@bs.as 6] V6
+  | [@bs.as 7] V7
+  | [@bs.as 8] V8
+  | [@bs.as 9] V9
+  | [@bs.as 10] V10
+  | [@bs.as 11] V11
+  | [@bs.as 12] V12;
 
-module Md = {
-  type t = [
-    | `False
-    | `Auto
-    | `True
-    | `V1
-    | `V2
-    | `V3
-    | `V4
-    | `V5
-    | `V6
-    | `V7
-    | `V8
-    | `V9
-    | `V10
-    | `V11
-    | `V12
-  ];
-  let tToJs =
-    fun
-    | `False => false->Obj.magic
-    | `Auto => "auto"->Obj.magic
-    | `True => true->Obj.magic
-    | `V1 => 1->Obj.magic
-    | `V2 => 2->Obj.magic
-    | `V3 => 3->Obj.magic
-    | `V4 => 4->Obj.magic
-    | `V5 => 5->Obj.magic
-    | `V6 => 6->Obj.magic
-    | `V7 => 7->Obj.magic
-    | `V8 => 8->Obj.magic
-    | `V9 => 9->Obj.magic
-    | `V10 => 10->Obj.magic
-    | `V11 => 11->Obj.magic
-    | `V12 => 12->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type md =
+  | [@bs.as 1] V1
+  | [@bs.as 2] V2
+  | [@bs.as 3] V3
+  | [@bs.as 4] V4
+  | [@bs.as 5] V5
+  | [@bs.as 6] V6
+  | [@bs.as 7] V7
+  | [@bs.as 8] V8
+  | [@bs.as 9] V9
+  | [@bs.as 10] V10
+  | [@bs.as 11] V11
+  | [@bs.as 12] V12;
 
-module Sm = {
-  type t = [
-    | `False
-    | `Auto
-    | `True
-    | `V1
-    | `V2
-    | `V3
-    | `V4
-    | `V5
-    | `V6
-    | `V7
-    | `V8
-    | `V9
-    | `V10
-    | `V11
-    | `V12
-  ];
-  let tToJs =
-    fun
-    | `False => false->Obj.magic
-    | `Auto => "auto"->Obj.magic
-    | `True => true->Obj.magic
-    | `V1 => 1->Obj.magic
-    | `V2 => 2->Obj.magic
-    | `V3 => 3->Obj.magic
-    | `V4 => 4->Obj.magic
-    | `V5 => 5->Obj.magic
-    | `V6 => 6->Obj.magic
-    | `V7 => 7->Obj.magic
-    | `V8 => 8->Obj.magic
-    | `V9 => 9->Obj.magic
-    | `V10 => 10->Obj.magic
-    | `V11 => 11->Obj.magic
-    | `V12 => 12->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type sm =
+  | [@bs.as 1] V1
+  | [@bs.as 2] V2
+  | [@bs.as 3] V3
+  | [@bs.as 4] V4
+  | [@bs.as 5] V5
+  | [@bs.as 6] V6
+  | [@bs.as 7] V7
+  | [@bs.as 8] V8
+  | [@bs.as 9] V9
+  | [@bs.as 10] V10
+  | [@bs.as 11] V11
+  | [@bs.as 12] V12;
 
 [@bs.deriving jsConverter]
 type spacing =
@@ -167,79 +101,35 @@ type wrap = [
   | [@bs.as "wrap-reverse"] `Wrap_Reverse
 ];
 
-module Xl = {
-  type t = [
-    | `False
-    | `Auto
-    | `True
-    | `V1
-    | `V2
-    | `V3
-    | `V4
-    | `V5
-    | `V6
-    | `V7
-    | `V8
-    | `V9
-    | `V10
-    | `V11
-    | `V12
-  ];
-  let tToJs =
-    fun
-    | `False => false->Obj.magic
-    | `Auto => "auto"->Obj.magic
-    | `True => true->Obj.magic
-    | `V1 => 1->Obj.magic
-    | `V2 => 2->Obj.magic
-    | `V3 => 3->Obj.magic
-    | `V4 => 4->Obj.magic
-    | `V5 => 5->Obj.magic
-    | `V6 => 6->Obj.magic
-    | `V7 => 7->Obj.magic
-    | `V8 => 8->Obj.magic
-    | `V9 => 9->Obj.magic
-    | `V10 => 10->Obj.magic
-    | `V11 => 11->Obj.magic
-    | `V12 => 12->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type xl =
+  | [@bs.as 1] V1
+  | [@bs.as 2] V2
+  | [@bs.as 3] V3
+  | [@bs.as 4] V4
+  | [@bs.as 5] V5
+  | [@bs.as 6] V6
+  | [@bs.as 7] V7
+  | [@bs.as 8] V8
+  | [@bs.as 9] V9
+  | [@bs.as 10] V10
+  | [@bs.as 11] V11
+  | [@bs.as 12] V12;
 
-module Xs = {
-  type t = [
-    | `False
-    | `Auto
-    | `True
-    | `V1
-    | `V2
-    | `V3
-    | `V4
-    | `V5
-    | `V6
-    | `V7
-    | `V8
-    | `V9
-    | `V10
-    | `V11
-    | `V12
-  ];
-  let tToJs =
-    fun
-    | `False => false->Obj.magic
-    | `Auto => "auto"->Obj.magic
-    | `True => true->Obj.magic
-    | `V1 => 1->Obj.magic
-    | `V2 => 2->Obj.magic
-    | `V3 => 3->Obj.magic
-    | `V4 => 4->Obj.magic
-    | `V5 => 5->Obj.magic
-    | `V6 => 6->Obj.magic
-    | `V7 => 7->Obj.magic
-    | `V8 => 8->Obj.magic
-    | `V9 => 9->Obj.magic
-    | `V10 => 10->Obj.magic
-    | `V11 => 11->Obj.magic
-    | `V12 => 12->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type xs =
+  | [@bs.as 1] V1
+  | [@bs.as 2] V2
+  | [@bs.as 3] V3
+  | [@bs.as 4] V4
+  | [@bs.as 5] V5
+  | [@bs.as 6] V6
+  | [@bs.as 7] V7
+  | [@bs.as 8] V8
+  | [@bs.as 9] V9
+  | [@bs.as 10] V10
+  | [@bs.as 11] V11
+  | [@bs.as 12] V12;
 
 module Classes = {
   type classesType =
@@ -408,18 +298,18 @@ external makePropsMui:
     ~alignItems: string=?,
     ~children: 'children=?,
     ~className: string=?,
-    ~component: 'union_rw3t=?,
+    ~component: 'union_roo9=?,
     ~container: bool=?,
     ~direction: string=?,
     ~item: bool=?,
     ~justify: string=?,
-    ~lg: 'any_rz2n=?,
-    ~md: 'any_rdmb=?,
-    ~sm: 'any_rvuq=?,
-    ~spacing: 'number_rzy8=?,
+    ~lg: 'number_rg9x=?,
+    ~md: 'number_rfws=?,
+    ~sm: 'number_rpe7=?,
+    ~spacing: 'number_rso1=?,
     ~wrap: string=?,
-    ~xl: 'any_rc3r=?,
-    ~xs: 'any_rza3=?,
+    ~xl: 'number_rbeu=?,
+    ~xs: 'number_rp9s=?,
     ~zeroMinWidth: bool=?,
     ~id: string=?,
     ~key: string=?,
@@ -448,15 +338,20 @@ let makeProps =
       ~direction: option(direction)=?,
       ~item: option(bool)=?,
       ~justify: option(justify)=?,
-      ~lg: option(Lg.t)=?,
-      ~md: option(Md.t)=?,
-      ~sm: option(Sm.t)=?,
+      ~lg: option(lg)=?,
+      ~md: option(md)=?,
+      ~sm: option(sm)=?,
       ~spacing: option(spacing)=?,
       ~wrap: option(wrap)=?,
-      ~xl: option(Xl.t)=?,
-      ~xs: option(Xs.t)=?,
+      ~xl: option(xl)=?,
+      ~xs: option(xs)=?,
       ~zeroMinWidth: option(bool)=?,
       ~id: option(string)=?,
+      ~xsAuto: option(bool)=?,
+      ~smAuto: option(bool)=?,
+      ~mdAuto: option(bool)=?,
+      ~lgAuto: option(bool)=?,
+      ~xlAuto: option(bool)=?,
       ~key: option(string)=?,
       ~ref: option(ReactDOMRe.domRef)=?,
       ~classes: option(Classes.t)=?,
@@ -464,23 +359,38 @@ let makeProps =
       (),
     ) =>
   makePropsMui(
-    ~alignContent=?alignContent->Belt.Option.map(v => alignContentToJs(v)),
-    ~alignItems=?alignItems->Belt.Option.map(v => alignItemsToJs(v)),
+    ~alignContent=?alignContent->(Belt.Option.map(v => alignContentToJs(v))),
+    ~alignItems=?alignItems->(Belt.Option.map(v => alignItemsToJs(v))),
     ~children?,
     ~className?,
     ~component=?
       component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~container?,
-    ~direction=?direction->Belt.Option.map(v => directionToJs(v)),
+    ~direction=?direction->(Belt.Option.map(v => directionToJs(v))),
     ~item?,
-    ~justify=?justify->Belt.Option.map(v => justifyToJs(v)),
-    ~lg=?lg->Belt.Option.map(v => Lg.tToJs(v)),
-    ~md=?md->Belt.Option.map(v => Md.tToJs(v)),
-    ~sm=?sm->Belt.Option.map(v => Sm.tToJs(v)),
-    ~spacing=?spacing->Belt.Option.map(v => spacingToJs(v)),
-    ~wrap=?wrap->Belt.Option.map(v => wrapToJs(v)),
-    ~xl=?xl->Belt.Option.map(v => Xl.tToJs(v)),
-    ~xs=?xs->Belt.Option.map(v => Xs.tToJs(v)),
+    ~justify=?justify->(Belt.Option.map(v => justifyToJs(v))),
+    ~lg=?
+      lgAuto
+      ->(Belt.Option.map(v => v->MaterialUi_Helpers.toJsUnsafe))
+      ->Belt.Option.getWithDefault(lg->(Belt.Option.map(v => lgToJs(v)))),
+    ~md=?
+      mdAuto
+      ->(Belt.Option.map(v => v->MaterialUi_Helpers.toJsUnsafe))
+      ->Belt.Option.getWithDefault(md->(Belt.Option.map(v => mdToJs(v)))),
+    ~sm=?
+      smAuto
+      ->(Belt.Option.map(v => v->MaterialUi_Helpers.toJsUnsafe))
+      ->Belt.Option.getWithDefault(sm->(Belt.Option.map(v => smToJs(v)))),
+    ~spacing=?spacing->(Belt.Option.map(v => spacingToJs(v))),
+    ~wrap=?wrap->(Belt.Option.map(v => wrapToJs(v))),
+    ~xl=?
+      xlAuto
+      ->(Belt.Option.map(v => v->MaterialUi_Helpers.toJsUnsafe))
+      ->Belt.Option.getWithDefault(xl->(Belt.Option.map(v => xlToJs(v)))),
+    ~xs=?
+      xsAuto
+      ->(Belt.Option.map(v => v->MaterialUi_Helpers.toJsUnsafe))
+      ->Belt.Option.getWithDefault(xs->(Belt.Option.map(v => xsToJs(v)))),
     ~zeroMinWidth?,
     ~id?,
     ~key?,

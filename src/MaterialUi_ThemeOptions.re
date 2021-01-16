@@ -566,21 +566,11 @@ module ContainerClassKey = {
   let make = t;
 };
 
-module Global = {
-  [@bs.deriving abstract]
-  type t = {
-    [@bs.optional] [@bs.as "@font-face"]
-    fontFace: Js.Json.t,
-  };
-
-  let make = t;
-};
-
 module MuiCssBaseline = {
   [@bs.deriving abstract]
   type t = {
     [@bs.optional] [@bs.as "@global"]
-    global: Global.t,
+    global: ReactDOMRe.Style.t,
   };
 
   let make = t;
@@ -1096,11 +1086,11 @@ module SvgIconClassKey = {
     [@bs.optional] [@bs.as "colorSecondary"]
     colorSecondary: string,
     [@bs.optional] [@bs.as "fontSizeInherit"]
-    fontSizeInherit: float,
+    fontSizeInherit: string,
     [@bs.optional] [@bs.as "fontSizeLarge"]
-    fontSizeLarge: float,
+    fontSizeLarge: string,
     [@bs.optional] [@bs.as "fontSizeSmall"]
-    fontSizeSmall: float,
+    fontSizeSmall: string,
     [@bs.optional] [@bs.as "root"]
     root: ReactDOMRe.Style.t,
   };
@@ -2824,18 +2814,6 @@ module TypeText = {
   let make = t;
 };
 
-module TonalOffset = {
-  [@bs.deriving abstract]
-  type t = {
-    [@bs.as "dark"]
-    dark: float,
-    [@bs.as "light"]
-    light: float,
-  };
-
-  let make = t;
-};
-
 module Warning = {
   [@bs.deriving abstract]
   type t = {
@@ -2910,7 +2888,7 @@ module PaletteOptions = {
     [@bs.optional] [@bs.as "text"]
     text: TypeText.t,
     [@bs.optional] [@bs.as "tonalOffset"]
-    tonalOffset: TonalOffset.t,
+    tonalOffset: float,
     [@bs.optional] [@bs.as "type"]
     type_: string,
     [@bs.optional] [@bs.as "warning"]
@@ -3008,7 +2986,7 @@ module Typography = {
     [@bs.optional] [@bs.as "fontFamily"]
     fontFamily: string,
     [@bs.optional] [@bs.as "fontSize"]
-    fontSize: float,
+    fontSize: string,
     [@bs.optional] [@bs.as "fontWeightBold"]
     fontWeightBold: string,
     [@bs.optional] [@bs.as "fontWeightLight"]
@@ -3084,13 +3062,38 @@ module ThemeOptions = {
     [@bs.optional] [@bs.as "shape"]
     shape: Shape.t,
     [@bs.optional] [@bs.as "spacing"]
-    spacing: Js.Json.t,
+    spacing: string,
     [@bs.optional] [@bs.as "transitions"]
     transitions: TransitionsOptions.t,
     [@bs.optional] [@bs.as "typography"]
     typography: Typography.t,
     [@bs.optional] [@bs.as "zIndex"]
     zIndex: ZIndex.t,
+  };
+
+  let spacingGet = value => {
+    let isNumeric: 'a => bool = [%raw
+      {|
+                function(obj) {
+                    var realStringObj = obj && obj.toString();
+                    return typeof obj !== 'object' && (realStringObj - parseFloat(realStringObj) + 1) >= 0;
+                }
+            |}
+    ];
+    let isBool: 'a => bool = [%raw
+      {|
+                function(obj) {
+                    return typeof obj === 'boolean';
+                }
+            |}
+    ];
+
+    spacingGet(value)
+    ->Belt.Option.map(v =>
+        isNumeric(v)
+          ? `Float(Obj.magic(v))
+          : isBool(v) ? `Bool(Obj.magic(v)) : `String(Obj.magic(v))
+      );
   };
 
   let make = t;

@@ -44,12 +44,12 @@ module Classes = {
 [@bs.obj]
 external makePropsMui:
   (
-    ~component: 'union_r68d=?,
-    ~elevation: 'number_x=?,
+    ~component: 'union_rw9i=?,
+    ~elevation: 'number_t=?,
     ~square: bool=?,
     ~variant: string=?,
     ~id: string=?,
-    ~activeStep: 'number_9=?,
+    ~activeStep: 'number_n=?,
     ~alternativeLabel: bool=?,
     ~children: 'children=?,
     ~className: string=?,
@@ -97,7 +97,7 @@ let makeProps =
     ~elevation=?
       elevation->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~square?,
-    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
+    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
     ~id?,
     ~activeStep=?
       activeStep->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),

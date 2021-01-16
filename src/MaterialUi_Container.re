@@ -1,14 +1,12 @@
-module MaxWidth = {
-  type t = [ | `Xs | `Sm | `Md | `Lg | `Xl | `False];
-  let tToJs =
-    fun
-    | `Xs => "xs"->Obj.magic
-    | `Sm => "sm"->Obj.magic
-    | `Md => "md"->Obj.magic
-    | `Lg => "lg"->Obj.magic
-    | `Xl => "xl"->Obj.magic
-    | `False => false->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type maxWidth = [
+  | [@bs.as "xs"] `Xs
+  | [@bs.as "sm"] `Sm
+  | [@bs.as "md"] `Md
+  | [@bs.as "lg"] `Lg
+  | [@bs.as "xl"] `Xl
+  | [@bs.as "false"] `False
+];
 
 module Classes = {
   type classesType =
@@ -58,10 +56,10 @@ external makePropsMui:
   (
     ~children: 'children=?,
     ~className: string=?,
-    ~component: 'union_rnbe=?,
+    ~component: 'union_rb3i=?,
     ~disableGutters: bool=?,
     ~fixed: bool=?,
-    ~maxWidth: 'any_rjyo=?,
+    ~maxWidth: string=?,
     ~id: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
@@ -85,7 +83,7 @@ let makeProps =
          )=?,
       ~disableGutters: option(bool)=?,
       ~fixed: option(bool)=?,
-      ~maxWidth: option(MaxWidth.t)=?,
+      ~maxWidth: option(maxWidth)=?,
       ~id: option(string)=?,
       ~key: option(string)=?,
       ~ref: option(ReactDOMRe.domRef)=?,
@@ -100,7 +98,7 @@ let makeProps =
       component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~disableGutters?,
     ~fixed?,
-    ~maxWidth=?maxWidth->Belt.Option.map(v => MaxWidth.tToJs(v)),
+    ~maxWidth=?maxWidth->(Belt.Option.map(v => maxWidthToJs(v))),
     ~id?,
     ~key?,
     ~ref?,

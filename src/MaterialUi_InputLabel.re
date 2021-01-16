@@ -9,9 +9,9 @@ type margin = [ | [@bs.as "dense"] `Dense];
 
 [@bs.deriving jsConverter]
 type variant = [
-  | [@bs.as "filled"] `Filled
-  | [@bs.as "outlined"] `Outlined
   | [@bs.as "standard"] `Standard
+  | [@bs.as "outlined"] `Outlined
+  | [@bs.as "filled"] `Filled
 ];
 
 module Classes = {
@@ -72,7 +72,7 @@ module Classes = {
 [@bs.obj]
 external makePropsMui:
   (
-    ~component: 'union_rn8k=?,
+    ~component: 'union_rq1z=?,
     ~filled: bool=?,
     ~id: string=?,
     ~children: 'children=?,
@@ -132,15 +132,15 @@ let makeProps =
     ~id?,
     ~children?,
     ~className?,
-    ~color=?color->Belt.Option.map(v => colorToJs(v)),
+    ~color=?color->(Belt.Option.map(v => colorToJs(v))),
     ~disableAnimation?,
     ~disabled?,
     ~error?,
     ~focused?,
-    ~margin=?margin->Belt.Option.map(v => marginToJs(v)),
+    ~margin=?margin->(Belt.Option.map(v => marginToJs(v))),
     ~required?,
     ~shrink?,
-    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
+    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
     ~htmlFor,
     ~key?,
     ~ref?,

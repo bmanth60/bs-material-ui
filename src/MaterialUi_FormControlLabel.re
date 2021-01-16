@@ -1,9 +1,9 @@
 [@bs.deriving jsConverter]
 type labelPlacement = [
-  | [@bs.as "bottom"] `Bottom
   | [@bs.as "end"] `End
   | [@bs.as "start"] `Start
   | [@bs.as "top"] `Top
+  | [@bs.as "bottom"] `Bottom
 ];
 
 module Classes = {
@@ -48,13 +48,13 @@ external makePropsMui:
   (
     ~checked: bool=?,
     ~className: string=?,
-    ~control: React.element,
+    ~control: React.element=?,
     ~disabled: bool=?,
     ~label: React.element=?,
     ~labelPlacement: string=?,
     ~name: string=?,
-    ~onChange: 'any_rydt=?,
-    ~value: 'any_rxa8=?,
+    ~onChange: 'any_rk41=?,
+    ~value: 'any_r6uh=?,
     ~id: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
@@ -68,13 +68,13 @@ let makeProps =
     (
       ~checked: option(bool)=?,
       ~className: option(string)=?,
-      ~control: React.element,
+      ~control: option(React.element)=?,
       ~disabled: option(bool)=?,
       ~label: option(React.element)=?,
       ~labelPlacement: option(labelPlacement)=?,
       ~name: option(string)=?,
       ~onChange: option(ReactEvent.Form.t => unit)=?,
-      ~value: option('any_rxa8)=?,
+      ~value: option('any_r6uh)=?,
       ~id: option(string)=?,
       ~key: option(string)=?,
       ~ref: option(ReactDOMRe.domRef)=?,
@@ -85,11 +85,11 @@ let makeProps =
   makePropsMui(
     ~checked?,
     ~className?,
-    ~control,
+    ~control?,
     ~disabled?,
     ~label?,
     ~labelPlacement=?
-      labelPlacement->Belt.Option.map(v => labelPlacementToJs(v)),
+      labelPlacement->(Belt.Option.map(v => labelPlacementToJs(v))),
     ~name?,
     ~onChange?,
     ~value?,

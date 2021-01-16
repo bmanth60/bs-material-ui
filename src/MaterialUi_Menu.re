@@ -1,22 +1,22 @@
 [@bs.deriving jsConverter]
 type horizontal_enum = [
-  | [@bs.as "center"] `Center
   | [@bs.as "left"] `Left
+  | [@bs.as "center"] `Center
   | [@bs.as "right"] `Right
 ];
 
 [@bs.deriving jsConverter]
 type vertical_enum = [
-  | [@bs.as "bottom"] `Bottom
-  | [@bs.as "center"] `Center
   | [@bs.as "top"] `Top
+  | [@bs.as "center"] `Center
+  | [@bs.as "bottom"] `Bottom
 ];
 
 module AnchorOrigin = {
   [@bs.deriving abstract]
   type t = {
-    horizontal: [ | `Enum(horizontal_enum) | `Int(int) | `Float(float)],
-    vertical: [ | `Enum(vertical_enum) | `Int(int) | `Float(float)],
+    horizontal: [ | `Int(int) | `Float(float) | `Enum(horizontal_enum)],
+    vertical: [ | `Int(int) | `Float(float) | `Enum(vertical_enum)],
   };
   let make = t;
 
@@ -112,8 +112,8 @@ type anchorReference = [
 module TransformOrigin = {
   [@bs.deriving abstract]
   type t = {
-    horizontal: [ | `Enum(horizontal_enum) | `Int(int) | `Float(float)],
-    vertical: [ | `Enum(vertical_enum) | `Int(int) | `Float(float)],
+    horizontal: [ | `Int(int) | `Float(float) | `Enum(horizontal_enum)],
+    vertical: [ | `Int(int) | `Float(float) | `Enum(vertical_enum)],
   };
   let make = t;
 
@@ -246,7 +246,7 @@ module Classes = {
 [@bs.obj]
 external makePropsMui:
   (
-    ~_BackdropComponent: 'union_r0y6=?,
+    ~_BackdropComponent: 'union_rlhy=?,
     ~_BackdropProps: Js.t({..})=?,
     ~closeAfterTransition: bool=?,
     ~disableAutoFocus: bool=?,
@@ -262,23 +262,23 @@ external makePropsMui:
     ~onBackdropClick: ReactEvent.Mouse.t => unit=?,
     ~onEscapeKeyDown: ReactEvent.Keyboard.t => unit=?,
     ~onRendered: ReactEvent.Synthetic.t => unit=?,
-    ~anchorOrigin: 'any_rs52=?,
-    ~anchorPosition: 'any_rkc4=?,
+    ~anchorOrigin: 'any_ryax=?,
+    ~anchorPosition: 'any_re5r=?,
     ~anchorReference: string=?,
     ~className: string=?,
-    ~container: 'union_rhmq=?,
-    ~elevation: 'number_k=?,
+    ~container: 'union_rnl7=?,
+    ~elevation: 'number_s=?,
     ~getContentAnchorEl: 'genericCallback=?,
-    ~marginThreshold: 'number_x=?,
-    ~transformOrigin: 'any_rjz3=?,
-    ~_TransitionComponent: 'union_r1fg=?,
+    ~marginThreshold: 'number_t=?,
+    ~transformOrigin: 'any_rtw6=?,
+    ~_TransitionComponent: 'union_rrca=?,
     ~_TransitionProps: Js.t({..})=?,
-    ~anchorEl: 'any_rt2q=?,
+    ~anchorEl: 'any_rnhx=?,
     ~autoFocus: bool=?,
     ~children: 'children=?,
     ~disableAutoFocusItem: bool=?,
     ~_MenuListProps: Js.t({..})=?,
-    ~onClose: 'any_rkre=?,
+    ~onClose: 'any_r5f2=?,
     ~onEnter: ReactEvent.Synthetic.t => unit=?,
     ~onEntered: ReactEvent.Synthetic.t => unit=?,
     ~onEntering: ReactEvent.Synthetic.t => unit=?,
@@ -288,7 +288,7 @@ external makePropsMui:
     ~_open: bool,
     ~_PaperProps: Js.t({..})=?,
     ~_PopoverClasses: Js.t({..})=?,
-    ~transitionDuration: 'union_rtlp=?,
+    ~transitionDuration: 'union_rkfa=?,
     ~variant: string=?,
     ~id: string=?,
     ~key: string=?,
@@ -328,7 +328,10 @@ let makeProps =
       ~anchorPosition: option(AnchorPosition.t)=?,
       ~anchorReference: option(anchorReference)=?,
       ~className: option(string)=?,
-      ~container: option([ | `Callback('genericCallback)])=?,
+      ~container:
+         option(
+           [ | `ObjectGeneric(Js.t({..})) | `Callback('genericCallback)],
+         )=?,
       ~elevation: option([ | `Int(int) | `Float(float)])=?,
       ~getContentAnchorEl: option('genericCallback)=?,
       ~marginThreshold: option([ | `Int(int) | `Float(float)])=?,
@@ -342,7 +345,7 @@ let makeProps =
            ],
          )=?,
       ~_TransitionProps: option(Js.t({..}))=?,
-      ~anchorEl: option('any_rt2q)=?,
+      ~anchorEl: option('any_rnhx)=?,
       ~autoFocus: option(bool)=?,
       ~children: option('children)=?,
       ~disableAutoFocusItem: option(bool)=?,
@@ -399,7 +402,7 @@ let makeProps =
     ~anchorOrigin=?AnchorOrigin.unwrap(anchorOrigin),
     ~anchorPosition=?AnchorPosition.unwrap(anchorPosition),
     ~anchorReference=?
-      anchorReference->Belt.Option.map(v => anchorReferenceToJs(v)),
+      anchorReference->(Belt.Option.map(v => anchorReferenceToJs(v))),
     ~className?,
     ~container=?
       container->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
@@ -448,7 +451,7 @@ let makeProps =
                               }
                             )
                           ),
-    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
+    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
     ~id?,
     ~key?,
     ~ref?,

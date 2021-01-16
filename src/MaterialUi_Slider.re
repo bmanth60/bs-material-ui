@@ -10,14 +10,12 @@ type orientation = [
   | [@bs.as "vertical"] `Vertical
 ];
 
-module Track = {
-  type t = [ | `Normal | `False | `Inverted];
-  let tToJs =
-    fun
-    | `Normal => "normal"->Obj.magic
-    | `False => false->Obj.magic
-    | `Inverted => "inverted"->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type track = [
+  | [@bs.as "normal"] `Normal
+  | [@bs.as "false"] `False
+  | [@bs.as "inverted"] `Inverted
+];
 
 [@bs.deriving jsConverter]
 type valueLabelDisplay = [
@@ -111,27 +109,27 @@ external makePropsMui:
     ~aria_labelledby: string=?,
     ~className: string=?,
     ~color: string=?,
-    ~component: 'union_rkan=?,
-    ~defaultValue: 'union_rbp6=?,
+    ~component: 'union_rffa=?,
+    ~defaultValue: 'union_rm16=?,
     ~disabled: bool=?,
-    ~getAriaLabel: 'any_riq2=?,
-    ~getAriaValueText: 'any_rgfd=?,
-    ~marks: 'union_rfd6=?,
-    ~max: 'number_g=?,
-    ~min: 'number_8=?,
+    ~getAriaLabel: 'any_rgct=?,
+    ~getAriaValueText: 'any_rkmx=?,
+    ~marks: 'union_rvmn=?,
+    ~max: 'number_s=?,
+    ~min: 'number_r=?,
     ~name: string=?,
-    ~onChange: 'any_r49t=?,
-    ~onChangeCommitted: 'any_roog=?,
+    ~onChange: 'any_r4wc=?,
+    ~onChangeCommitted: 'any_r5dy=?,
     ~onMouseDown: ReactEvent.Mouse.t => unit=?,
     ~orientation: string=?,
     ~scale: 'genericCallback=?,
-    ~step: 'number_r=?,
-    ~_ThumbComponent: 'union_ru38=?,
-    ~track: 'any_r050=?,
-    ~value: 'union_r3f8=?,
-    ~_ValueLabelComponent: 'union_rf6f=?,
+    ~step: 'number_6=?,
+    ~_ThumbComponent: 'union_r6kn=?,
+    ~track: string=?,
+    ~value: 'union_r86d=?,
+    ~_ValueLabelComponent: 'union_r2mv=?,
     ~valueLabelDisplay: string=?,
-    ~valueLabelFormat: 'union_r7b0=?,
+    ~valueLabelFormat: 'union_r0d6=?,
     ~id: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
@@ -166,12 +164,19 @@ let makeProps =
       ~disabled: option(bool)=?,
       ~getAriaLabel: option(int => string)=?,
       ~getAriaValueText: option((int, int) => string)=?,
-      ~marks: option([ | `Bool(bool) | `Array('any_r59s)])=?,
+      ~marks: option([ | `Bool(bool) | `Array('any_ranr)])=?,
       ~max: option([ | `Int(int) | `Float(float)])=?,
       ~min: option([ | `Int(int) | `Float(float)])=?,
       ~name: option(string)=?,
-      ~onChange: option((ReactEvent.Form.t, int) => unit)=?,
-      ~onChangeCommitted: option((ReactEvent.Form.t, int) => unit)=?,
+      ~onChange: option((Js.t({..}), int) => unit)=?,
+      ~onChangeCommitted:
+         option(
+           (
+             Js.t({..}),
+             [ | `IntArray(array(int)) | `FloatArray(array(float))]
+           ) =>
+           unit,
+         )=?,
       ~onMouseDown: option(ReactEvent.Mouse.t => unit)=?,
       ~orientation: option(orientation)=?,
       ~scale: option('genericCallback)=?,
@@ -184,7 +189,7 @@ let makeProps =
              | `Element(React.element)
            ],
          )=?,
-      ~track: option(Track.t)=?,
+      ~track: option(track)=?,
       ~value:
          option(
            [
@@ -215,7 +220,7 @@ let makeProps =
   makePropsMui(
     ~aria_labelledby?,
     ~className?,
-    ~color=?color->Belt.Option.map(v => colorToJs(v)),
+    ~color=?color->(Belt.Option.map(v => colorToJs(v))),
     ~component=?
       component->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~defaultValue=?
@@ -230,7 +235,7 @@ let makeProps =
     ~onChange?,
     ~onChangeCommitted?,
     ~onMouseDown?,
-    ~orientation=?orientation->Belt.Option.map(v => orientationToJs(v)),
+    ~orientation=?orientation->(Belt.Option.map(v => orientationToJs(v))),
     ~scale?,
     ~step=?step->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~_ThumbComponent=?
@@ -239,7 +244,7 @@ let makeProps =
                            MaterialUi_Helpers.unwrapValue(v)
                          )
                        ),
-    ~track=?track->Belt.Option.map(v => Track.tToJs(v)),
+    ~track=?track->(Belt.Option.map(v => trackToJs(v))),
     ~value=?value->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~_ValueLabelComponent=?
       _ValueLabelComponent->(
@@ -248,7 +253,7 @@ let makeProps =
                               )
                             ),
     ~valueLabelDisplay=?
-      valueLabelDisplay->Belt.Option.map(v => valueLabelDisplayToJs(v)),
+      valueLabelDisplay->(Belt.Option.map(v => valueLabelDisplayToJs(v))),
     ~valueLabelFormat=?
       valueLabelFormat->(
                           Belt.Option.map(v =>

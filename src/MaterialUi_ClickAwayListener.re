@@ -1,30 +1,24 @@
-module MouseEvent = {
-  type t = [ | `OnClick | `OnMouseDown | `OnMouseUp | `False];
-  let tToJs =
-    fun
-    | `OnClick => "onClick"->Obj.magic
-    | `OnMouseDown => "onMouseDown"->Obj.magic
-    | `OnMouseUp => "onMouseUp"->Obj.magic
-    | `False => false->Obj.magic;
-};
+[@bs.deriving jsConverter]
+type mouseEvent = [
+  | [@bs.as "onClick"] `OnClick
+  | [@bs.as "onMouseDown"] `OnMouseDown
+  | [@bs.as "onMouseUp"] `OnMouseUp
+  | [@bs.as "false"] `False
+];
 
-module TouchEvent = {
-  type t = [ | `OnTouchEnd | `OnTouchStart | `False];
-  let tToJs =
-    fun
-    | `OnTouchEnd => "onTouchEnd"->Obj.magic
-    | `OnTouchStart => "onTouchStart"->Obj.magic
-    | `False => false->Obj.magic;
-};
-
+[@bs.deriving jsConverter]
+type touchEvent = [
+  | [@bs.as "onTouchStart"] `OnTouchStart
+  | [@bs.as "onTouchEnd"] `OnTouchEnd
+  | [@bs.as "false"] `False
+];
 [@bs.obj]
 external makePropsMui:
   (
     ~children: 'children=?,
-    ~disableReactTree: bool=?,
-    ~mouseEvent: 'any_rq5x=?,
+    ~mouseEvent: string=?,
     ~onClickAway: ReactEvent.Mouse.t => unit,
-    ~touchEvent: 'any_rq7s=?,
+    ~touchEvent: string=?,
     ~id: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
@@ -35,10 +29,9 @@ external makePropsMui:
 let makeProps =
     (
       ~children: option('children)=?,
-      ~disableReactTree: option(bool)=?,
-      ~mouseEvent: option(MouseEvent.t)=?,
+      ~mouseEvent: option(mouseEvent)=?,
       ~onClickAway: ReactEvent.Mouse.t => unit,
-      ~touchEvent: option(TouchEvent.t)=?,
+      ~touchEvent: option(touchEvent)=?,
       ~id: option(string)=?,
       ~key: option(string)=?,
       ~ref: option(ReactDOMRe.domRef)=?,
@@ -46,10 +39,9 @@ let makeProps =
     ) =>
   makePropsMui(
     ~children?,
-    ~disableReactTree?,
-    ~mouseEvent=?mouseEvent->Belt.Option.map(v => MouseEvent.tToJs(v)),
+    ~mouseEvent=?mouseEvent->(Belt.Option.map(v => mouseEventToJs(v))),
     ~onClickAway,
-    ~touchEvent=?touchEvent->Belt.Option.map(v => TouchEvent.tToJs(v)),
+    ~touchEvent=?touchEvent->(Belt.Option.map(v => touchEventToJs(v))),
     ~id?,
     ~key?,
     ~ref?,

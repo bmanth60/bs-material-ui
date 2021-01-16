@@ -6,19 +6,19 @@ type color = [
 
 [@bs.deriving jsConverter]
 type margin = [
-  | [@bs.as "dense"] `Dense
   | [@bs.as "none"] `None
+  | [@bs.as "dense"] `Dense
   | [@bs.as "normal"] `Normal
 ];
 
 [@bs.deriving jsConverter]
-type size = [ | [@bs.as "medium"] `Medium | [@bs.as "small"] `Small];
+type size = [ | [@bs.as "small"] `Small | [@bs.as "medium"] `Medium];
 
 [@bs.deriving jsConverter]
 type variant = [
-  | [@bs.as "filled"] `Filled
-  | [@bs.as "outlined"] `Outlined
   | [@bs.as "standard"] `Standard
+  | [@bs.as "outlined"] `Outlined
+  | [@bs.as "filled"] `Filled
 ];
 
 module Classes = {
@@ -46,14 +46,14 @@ module Classes = {
 [@bs.obj]
 external makePropsMui:
   (
-    ~component: 'union_rusm=?,
+    ~component: 'union_rjdy=?,
     ~focused: bool=?,
     ~autoComplete: string=?,
     ~autoFocus: bool=?,
     ~children: 'children=?,
     ~className: string=?,
     ~color: string=?,
-    ~defaultValue: 'union_rgfm=?,
+    ~defaultValue: 'union_r706=?,
     ~disabled: bool=?,
     ~error: bool=?,
     ~_FormHelperTextProps: Js.t({..})=?,
@@ -62,24 +62,24 @@ external makePropsMui:
     ~hiddenLabel: bool=?,
     ~id: string=?,
     ~_InputLabelProps: Js.t({..})=?,
-    ~inputProps: Js.t({..})=?,
     ~_InputProps: Js.t({..})=?,
+    ~inputProps: Js.t({..})=?,
     ~label: React.element=?,
     ~margin: string=?,
     ~multiline: bool=?,
     ~name: string=?,
     ~onBlur: ReactEvent.Focus.t => unit=?,
-    ~onChange: 'any_rtim=?,
+    ~onChange: 'any_rese=?,
     ~onFocus: ReactEvent.Focus.t => unit=?,
     ~placeholder: string=?,
     ~required: bool=?,
-    ~rows: 'union_rtiz=?,
-    ~rowsMax: 'union_rver=?,
+    ~rows: 'union_r6fs=?,
+    ~rowsMax: 'union_rf5h=?,
     ~select: bool=?,
     ~_SelectProps: Js.t({..})=?,
     ~size: string=?,
     ~_type: string=?,
-    ~value: 'union_rdfx=?,
+    ~value: 'union_rr12=?,
     ~variant: string=?,
     ~key: string=?,
     ~ref: ReactDOMRe.domRef=?,
@@ -115,8 +115,8 @@ let makeProps =
       ~hiddenLabel: option(bool)=?,
       ~id: option(string)=?,
       ~_InputLabelProps: option(Js.t({..}))=?,
-      ~inputProps: option(Js.t({..}))=?,
       ~_InputProps: option(Js.t({..}))=?,
+      ~inputProps: option(Js.t({..}))=?,
       ~label: option(React.element)=?,
       ~margin: option(margin)=?,
       ~multiline: option(bool)=?,
@@ -126,8 +126,8 @@ let makeProps =
       ~onFocus: option(ReactEvent.Focus.t => unit)=?,
       ~placeholder: option(string)=?,
       ~required: option(bool)=?,
-      ~rows: option([ | `Int(int) | `Float(float) | `String(string)])=?,
-      ~rowsMax: option([ | `Int(int) | `Float(float) | `String(string)])=?,
+      ~rows: option([ | `String(string) | `Int(int) | `Float(float)])=?,
+      ~rowsMax: option([ | `String(string) | `Int(int) | `Float(float)])=?,
       ~select: option(bool)=?,
       ~_SelectProps: option(Js.t({..}))=?,
       ~size: option(size)=?,
@@ -148,7 +148,7 @@ let makeProps =
     ~autoFocus?,
     ~children?,
     ~className?,
-    ~color=?color->Belt.Option.map(v => colorToJs(v)),
+    ~color=?color->(Belt.Option.map(v => colorToJs(v))),
     ~defaultValue=?
       defaultValue->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~disabled?,
@@ -159,10 +159,10 @@ let makeProps =
     ~hiddenLabel?,
     ~id?,
     ~_InputLabelProps?,
-    ~inputProps?,
     ~_InputProps?,
+    ~inputProps?,
     ~label?,
-    ~margin=?margin->Belt.Option.map(v => marginToJs(v)),
+    ~margin=?margin->(Belt.Option.map(v => marginToJs(v))),
     ~multiline?,
     ~name?,
     ~onBlur?,
@@ -175,10 +175,10 @@ let makeProps =
       rowsMax->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
     ~select?,
     ~_SelectProps?,
-    ~size=?size->Belt.Option.map(v => sizeToJs(v)),
+    ~size=?size->(Belt.Option.map(v => sizeToJs(v))),
     ~_type=?type_,
     ~value=?value->(Belt.Option.map(v => MaterialUi_Helpers.unwrapValue(v))),
-    ~variant=?variant->Belt.Option.map(v => variantToJs(v)),
+    ~variant=?variant->(Belt.Option.map(v => variantToJs(v))),
     ~key?,
     ~ref?,
     ~classes=?Belt.Option.map(classes, v => Classes.to_obj(v)),
